@@ -2,8 +2,4 @@
 
 import MediaPlayerView from './MediaPlayerView';
 
-const MediaKit = {
-  MediaPlayerView
-};
-
-export default MediaKit;
+export {MediaPlayerView};

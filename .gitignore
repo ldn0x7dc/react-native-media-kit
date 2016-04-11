@@ -29,3 +29,4 @@ project.xcworkspace
 .idea
 .gradle
 local.properties
+*.log

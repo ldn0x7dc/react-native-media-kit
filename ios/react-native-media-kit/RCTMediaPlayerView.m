@@ -167,6 +167,7 @@
     [self onProgress];
   } else if([notification.name isEqualToString:MPMoviePlayerPlaybackDidFinishNotification]) {
     if (self.onPlayerFinished) {
+      [self onProgress];
       self.onPlayerFinished(nil);
     }
   }

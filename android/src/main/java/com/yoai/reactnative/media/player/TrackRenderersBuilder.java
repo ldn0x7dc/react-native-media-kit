@@ -5,6 +5,7 @@ import com.google.android.exoplayer.TrackRenderer;
 public interface TrackRenderersBuilder {
 
   int TRACK_RENDER_COUNT = 4;
+
   int TRACK_VIDEO_INDEX = 0;
   int TRACK_AUDIO_INDEX = 1;
   int TRACK_TEXT_INDEX = 2;

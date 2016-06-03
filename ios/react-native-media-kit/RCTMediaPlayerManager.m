@@ -11,6 +11,9 @@ RCT_EXPORT_MODULE(RCTMediaPlayerView)
 }
 
 RCT_EXPORT_VIEW_PROPERTY(autoplay, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(src, NSString*)
+RCT_EXPORT_VIEW_PROPERTY(preload, NSString*)
+RCT_EXPORT_VIEW_PROPERTY(loop, BOOL)
 
 RCT_EXPORT_VIEW_PROPERTY(onPlayerPaused, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onPlayerPlaying, RCTBubblingEventBlock)
@@ -19,9 +22,9 @@ RCT_EXPORT_VIEW_PROPERTY(onPlayerBuffering, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onPlayerBufferOK, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onPlayerProgress, RCTBubblingEventBlock)
 
-RCT_CUSTOM_VIEW_PROPERTY(uri, NSString, RCTMediaPlayerView) {
-  [view setUri:json?: NULL];
-}
+//RCT_CUSTOM_VIEW_PROPERTY(uri, NSString, RCTMediaPlayerView) {
+//  [view setUri:json?: NULL];
+//}
 
 - (NSDictionary<NSString *, id> *)constantsToExport {
   return [super constantsToExport];
@@ -30,6 +33,12 @@ RCT_CUSTOM_VIEW_PROPERTY(uri, NSString, RCTMediaPlayerView) {
 RCT_EXPORT_METHOD(pause:(nonnull NSNumber *)reactTag) {
   [self executeBlock:^(RCTMediaPlayerView *view) {
     [view pause];
+  } withTag:reactTag];
+}
+
+RCT_EXPORT_METHOD(stop:(nonnull NSNumber *)reactTag) {
+  [self executeBlock:^(RCTMediaPlayerView *view) {
+    [view stop];
   } withTag:reactTag];
 }
 

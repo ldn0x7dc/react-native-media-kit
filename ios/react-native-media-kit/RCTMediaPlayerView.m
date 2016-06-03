@@ -3,8 +3,6 @@
 
 @interface RCTMediaPlayerView ()
 
-@property (nonatomic, strong) MPMoviePlayerController *playerController;
-
 @property (nonatomic, strong) NSTimer *progressTimer;
 
 @end
@@ -13,12 +11,12 @@
 @private
   double lastCurrent;
   double lastTotal;
+  MPMoviePlayerController *playerController;
 }
 
 - (instancetype) init {
   self = [super init];
   if (self) {
-    self.backgroundColor = [UIColor redColor];
     lastCurrent = -1;
     lastTotal = -1;
   }
@@ -26,53 +24,119 @@
 }
 
 - (void)dealloc{
+  NSLog(@"dealloc...");
+  if(playerController) {
+    [playerController stop];
+  }
   [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)bindController {
-  [self.playerController.view setFrame: self.bounds];
-  [self addSubview:self.playerController.view];
+- (void)willMoveToWindow:(UIWindow *)newWindow {
+  NSLog(@"willMoveToWindow...%@", newWindow);
+  if(!newWindow && playerController) {
+    [playerController stop];
+  }
+}
+
+- (void)initPlayerControllerIfNeeded {
+  if(!playerController) {
+    playerController = [[MPMoviePlayerController alloc] init];
+    playerController.controlStyle = MPMovieControlStyleNone;
+    playerController.shouldAutoplay = NO;
+    playerController.repeatMode = MPMovieRepeatModeNone;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onMPMoviePlayerNotification:) name:MPMoviePlayerPlaybackDidFinishNotification object:playerController];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onMPMoviePlayerNotification:) name:MPMoviePlayerLoadStateDidChangeNotification object:playerController];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onMPMoviePlayerNotification:) name:MPMovieDurationAvailableNotification object:playerController];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onMPMoviePlayerNotification:) name:MPMovieNaturalSizeAvailableNotification object:playerController];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onMPMoviePlayerNotification:) name:MPMoviePlayerPlaybackStateDidChangeNotification object:playerController];
+    
+    [playerController.view setFrame: self.bounds];
+    [self addSubview: playerController.view];
+    
+    [self updateProps];
+  }
 }
 
 - (void) setAutoplay:(BOOL)autoplay {
   NSLog(@"setAutoplay...autoplay=%d", autoplay);
+  _autoplay = autoplay;
+  
+  [self updateProps];
 }
 
-- (void) setUri: (NSString *)uri {
-  NSLog(@"setUri...uri=%@", uri);
-  NSURL *url = [NSURL URLWithString:uri];
-  [self.playerController stop];
-  self.playerController.contentURL = url;
-  [self.playerController play];
-}
-
-
-- (MPMoviePlayerController *) playerController {
-  if (!_playerController) {
-    _playerController = [[MPMoviePlayerController alloc] init];
-    _playerController.controlStyle = MPMovieControlStyleNone;
-    _playerController.shouldAutoplay = YES;
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onMPMoviePlayerNotification:) name:MPMoviePlayerPlaybackDidFinishNotification object:_playerController];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onMPMoviePlayerNotification:) name:MPMoviePlayerLoadStateDidChangeNotification object:_playerController];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onMPMoviePlayerNotification:) name:MPMovieDurationAvailableNotification object:_playerController];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onMPMoviePlayerNotification:) name:MPMovieNaturalSizeAvailableNotification object:_playerController];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onMPMoviePlayerNotification:) name:MPMoviePlayerPlaybackStateDidChangeNotification object:_playerController];
+- (void) setSrc: (NSString *)uri {
+  NSLog(@"setSrc...src=%@", uri);
+  _src = uri;
+  
+  if(playerController) {
+    [playerController stop];
+    playerController.contentURL = nil;
   }
-  return _playerController;
+  [self updateProps];
+}
+
+- (void) setPreload:(NSString *)preload {
+  NSLog(@"setPreload...preload=%@", preload);
+  _preload = preload;
+  
+  [self updateProps];
+}
+
+- (void) setLoop:(BOOL)loop {
+  NSLog(@"setLoop...loop=%d", loop);
+  _loop = loop;
+  
+  [self updateProps];
+}
+
+- (void) updateProps {
+  if(!playerController)
+    return;
+  if(self.loop) {
+    playerController.repeatMode = MPMovieRepeatModeOne;
+  } else {
+    playerController.repeatMode = MPMovieRepeatModeNone;
+  }
+  
+  if(!self.src) {
+    return;
+  }
+  
+  if(playerController.contentURL && playerController.isPreparedToPlay) {
+    return;
+  }
+  
+  //autoplay and preload options are only effective before a video is played
+  if(self.autoplay) {
+    playerController.shouldAutoplay = YES;
+    playerController.contentURL = [NSURL URLWithString:self.src];
+    [playerController prepareToPlay];
+  } else {
+    playerController.shouldAutoplay = NO;
+    if(self.preload) {
+      if([self.preload isEqualToString:@"none"]) {
+        playerController.contentURL = nil;
+      } else if([self.preload isEqualToString:@"metadata"]) {
+        playerController.contentURL = [NSURL URLWithString:self.src];
+      } else if([self.preload isEqualToString:@"auto"]) {
+        playerController.contentURL = [NSURL URLWithString:self.src];
+        [playerController prepareToPlay];
+      }
+    }
+  }
 }
 
 - (void) layoutSubviews {
   NSLog(@"layoutSubviews...");
   [super layoutSubviews];
-  [self bindController];
-  
+  [self initPlayerControllerIfNeeded];
 }
 
 - (void)onMPMoviePlayerNotification: (NSNotification *) notification {
   NSLog(@"onMPMoviePlayerNotification...name=%@", notification.name);
   if ([notification.name isEqualToString:MPMoviePlayerPlaybackStateDidChangeNotification]) {
-    MPMoviePlaybackState playState = self.playerController.playbackState;
+    MPMoviePlaybackState playState = playerController.playbackState;
     NSLog(@"playState=%@", [self descPlayState:playState]);
     if (playState == MPMoviePlaybackStatePlaying) {
       [self startProgressTimer];
@@ -88,7 +152,7 @@
       }
     }
   } else if ([notification.name isEqualToString:MPMoviePlayerLoadStateDidChangeNotification]) {
-    MPMovieLoadState loadState = self.playerController.loadState;
+    MPMovieLoadState loadState = playerController.loadState;
     NSLog(@"loadState=%@", [self descLoadState:loadState]);
     if ((loadState & MPMovieLoadStateStalled) == MPMovieLoadStateStalled) {
       if(self.onPlayerBuffering) {
@@ -108,6 +172,7 @@
   }
 }
 
+// for debug info
 - (NSString *)descPlayState: (MPMoviePlaybackState) state {
   switch (state) {
     case MPMoviePlaybackStateStopped:
@@ -127,6 +192,7 @@
   }
 }
 
+// for debug info
 - (NSString *)descLoadState: (MPMovieLoadState) state {
   if ((state & MPMovieLoadStateStalled) == MPMovieLoadStateStalled) {
     return @"stalled";
@@ -147,12 +213,16 @@
   [[NSRunLoop currentRunLoop] addTimer:self.progressTimer forMode:NSDefaultRunLoopMode];
 }
 
+- (void)stopProgressTimer {
+  [self.progressTimer invalidate];
+}
+
 - (void)onProgress {
-  double currentTime = floor(self.playerController.currentPlaybackTime);
+  double currentTime = floor(playerController.currentPlaybackTime);
   if (isnan(currentTime)) {
     currentTime = 0;
   }
-  double totalTime = floor(self.playerController.duration);
+  double totalTime = floor(playerController.duration);
   if (isnan(totalTime)) {
     totalTime = 0;
   }
@@ -166,31 +236,36 @@
   }
 }
 
-- (NSString *)formatProgress: (double)time {
-  double minutes = floor(time / 60.0);
-  double seconds = floor(fmod(time, 60.0));
-  return [NSString stringWithFormat:@"%02.0f:%02.0f", minutes, seconds];
-}
-
-- (void)stopProgressTimer {
-  [self.progressTimer invalidate];
-}
-
 - (void)pause {
   NSLog(@"pause...");
-  [self.playerController pause];
+  if(!playerController)
+    return;
+  [playerController pause];
 }
 
 - (void)play {
   NSLog(@"play...");
-  [self.playerController play];
+  if(!playerController)
+    return;
+  if(!playerController.contentURL && self.src) {
+    NSLog(@"play...assign src=%@", self.src);
+    playerController.contentURL = [NSURL URLWithString:self.src];
+  }
+  playerController.shouldAutoplay = YES;
+  [playerController play];
+}
+
+- (void)stop {
+  NSLog(@"stop...");
+  if(!playerController)
+    return;
+  [playerController stop];
 }
 
 - (void)seekTo: (NSTimeInterval) timeMs {
   NSLog(@"seekTo...timeMs=%f", timeMs);
-  [self.playerController pause];
-  [self.playerController setCurrentPlaybackTime:timeMs/1000];
-  [self.playerController play];
+  if(!playerController)
+    return;
+  [playerController setCurrentPlaybackTime:timeMs/1000];
 }
-
 @end

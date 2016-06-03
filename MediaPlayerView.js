@@ -1,18 +1,19 @@
-import React, {
+import React, {PropTypes} from 'react';
+
+import ReactNative, {
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
   NativeModules,
   requireNativeComponent,
-  PropTypes,
   Dimensions,
   ScrollView,
   Image,
   Platform,
   ProgressBarAndroid,
   ActivityIndicatorIOS,
-  SliderIOS
+  Slider
 } from 'react-native';
 
 const UIManager = NativeModules.UIManager;
@@ -21,9 +22,11 @@ const RCTMediaPlayerView = requireNativeComponent('RCTMediaPlayerView', {
   name: 'RCTMediaPlayerView',
   propTypes: {
     ...View.propTypes,
-    uri: PropTypes.string,
-    backgroundPlay: PropTypes.bool,
+    src: PropTypes.string,
+    //backgroundPlay: PropTypes.bool,
     autoplay: PropTypes.bool,
+    preload: PropTypes.string,
+    loop: PropTypes.bool,
 
     onPlayerPaused: PropTypes.func,
     onPlayerPlaying: PropTypes.func,
@@ -36,6 +39,17 @@ const RCTMediaPlayerView = requireNativeComponent('RCTMediaPlayerView', {
 
 export default class MediaPlayerView extends React.Component {
 
+  static propTypes = {
+    ...RCTMediaPlayerView.propTypes,
+    controls: PropTypes.bool,
+  }
+
+  static defaultProps = {
+    autoplay: false,
+    controls: true,
+    preload: 'none'
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -44,6 +58,11 @@ export default class MediaPlayerView extends React.Component {
       current: 0,
       total: 0,
     };
+  }
+
+  componentWillUnmount() {
+    console.log('componentWillUnmount...');
+    this.stop();
   }
 
   render() {
@@ -105,6 +124,14 @@ export default class MediaPlayerView extends React.Component {
     );
   }
 
+  stop() {
+    UIManager.dispatchViewManagerCommand(
+      this._getMediaPlayerViewHandle(),
+      UIManager.RCTMediaPlayerView.Commands.stop,
+      null
+    );
+  }
+
   seekTo(timeMs) {
     console.log('seekTo...' + timeMs);
     let args = [timeMs];
@@ -116,7 +143,7 @@ export default class MediaPlayerView extends React.Component {
   }
 
   _getMediaPlayerViewHandle() {
-    return React.findNodeHandle(this.refs[RCT_MEDIA_PLAYER_VIEW_REF]);
+    return ReactNative.findNodeHandle(this.refs[RCT_MEDIA_PLAYER_VIEW_REF]);
   }
 
   _onPlayerBuffering() {
@@ -187,13 +214,6 @@ export default class MediaPlayerView extends React.Component {
       });
     }
   }
-}
-
-MediaPlayerView.propTypes = {
-  controls: PropTypes.bool,
-}
-MediaPlayerView.defaultProps = {
-  controls: true,
 }
 
 /**
@@ -326,21 +346,3 @@ class ActivityIndicator extends React.Component {
     return null;
   }
 }
-
-import Slider from './Slider';
-//class Slider extends React.Component {
-//  render() {
-//    if (Platform.OS === 'android') {
-//
-//    } else if (Platform.OS === 'ios') {
-//      return (
-//        <SliderIOS
-//          {...this.props}
-//          thumbImage={require('./img/media-player-thumb.png')}
-//        />
-//      );
-//    }
-//
-//    return null;
-//  }
-//}

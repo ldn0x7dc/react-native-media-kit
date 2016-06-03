@@ -11,14 +11,15 @@
 @property (nonatomic, strong) RCTDirectEventBlock onPlayerBuffering;
 @property (nonatomic, strong) RCTDirectEventBlock onPlayerBufferOK;
 @property (nonatomic, strong) RCTDirectEventBlock onPlayerFinished;
+
 @property (nonatomic) BOOL autoplay;
-
-
-
-- (void)setUri: (NSString *)uri;
+@property (nonatomic) NSString* src;
+@property (nonatomic) NSString* preload; //could be "none", "metadata", "auto"
+@property (nonatomic) BOOL loop;
 
 - (void)pause;
 - (void)play;
+- (void)stop;
 - (void)seekTo: (NSTimeInterval)timeInSec;
 
 @end

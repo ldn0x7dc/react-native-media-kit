@@ -2,4 +2,7 @@
 
 import MediaPlayerView from './MediaPlayerView';
 
-export {MediaPlayerView};
+const Video = MediaPlayerView;
+const Audio = MediaPlayerView;
+
+export {Video, Audio};

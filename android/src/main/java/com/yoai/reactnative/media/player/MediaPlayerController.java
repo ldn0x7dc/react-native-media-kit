@@ -13,7 +13,6 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.MediaController;
 
 import com.google.android.exoplayer.AspectRatioFrameLayout;
 import com.google.android.exoplayer.DummyTrackRenderer;
@@ -30,7 +29,6 @@ import com.google.android.exoplayer.metadata.id3.Id3Frame;
 import com.google.android.exoplayer.text.Cue;
 import com.google.android.exoplayer.text.TextRenderer;
 import com.google.android.exoplayer.upstream.BandwidthMeter;
-import com.google.android.exoplayer.util.PlayerControl;
 import com.google.android.exoplayer.util.Util;
 import com.yoai.reactnative.media.player.trackrenderer.DashRenderersBuilder;
 import com.yoai.reactnative.media.player.trackrenderer.ExtractorRenderersBuilder;
@@ -41,13 +39,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-public class MediaPlayerController implements TextureView.SurfaceTextureListener {
+public class MediaPlayerController {
   private static final String TAG = "MediaPlayerController";
 
   private final Context context;
   private final ExoPlayer exoPlayer;
   private final Handler mainHandler;
-  private final PlayerControl playerControl;
 
   private String uri;
 
@@ -61,41 +58,81 @@ public class MediaPlayerController implements TextureView.SurfaceTextureListener
 
 
   private final AspectRatioFrameLayout aspectRatioFrameLayout;
+  private TextureView textureView;
   private SurfaceTexture surfaceTexture;
 
   private boolean ended = false;
+  private boolean loop = false;
 
   public MediaPlayerController(Context context) {
     this.context = context;
     this.exoPlayer = ExoPlayer.Factory.newInstance(TrackRenderersBuilder.TRACK_RENDER_COUNT, 1000, 1000);
     this.exoPlayer.addListener(internalEventListener);
+    this.exoPlayer.setPlayWhenReady(true);
     this.mainHandler = new Handler(Looper.getMainLooper());
-    this.playerControl = new PlayerControl(exoPlayer);
+
 
     this.aspectRatioFrameLayout = new AspectRatioFrameLayout(context);
+    this.textureView = new TextureView(aspectRatioFrameLayout.getContext());
+    this.textureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+      @Override
+      public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+        Log.d(TAG, "onSurfaceTextureAvailable...w=" + width + ", h=" + height + ", surface=" + surface);
+        if(surfaceTexture != null) {
+          Log.d(TAG, "onSurfaceTextureAvailable...reuse old surfaceTexture");
+          textureView.setSurfaceTexture(surfaceTexture);
+          return;
+        }
+        setSurfaceTexture(surface);
+      }
 
-    //TODO
-    this.exoPlayer.setPlayWhenReady(true);
+      @Override
+      public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+        Log.d(TAG, "onSurfaceTextureSizeChanged...w=" + width + ", h=" + height);
+      }
+
+      @Override
+      public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+        Log.d(TAG, "onSurfaceTextureDestroyed...");
+        return false;
+      }
+
+      @Override
+      public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+      }
+    });
+    this.aspectRatioFrameLayout.addView(textureView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
   }
 
   public void setContentUri(String uri) {
-    if (uri != null && !uri.equals(this.uri)) {
-      this.uri = uri;
-      renderTracks(uri);
+    if(uri != null && uri.equals(this.uri))
+      return;
+    this.uri = uri;
+    resetPlayerForReuse();
+  }
+
+  public void prepareToPlay() {
+    Log.d(TAG, "prepareToPlay...src=" + uri);
+    if(this.uri != null) {
+      renderTracks(this.uri);
     }
   }
 
-
-
-  private void renderTracks(String uri) {
+  private void resetPlayerForReuse() {
+    this.exoPlayer.stop();
+    this.exoPlayer.seekTo(0);
     if (this.trackRenderersBuilder != null) {
+      this.trackRenderersBuilder.cancel();
       this.trackRenderersBuilder = null;
     }
-    this.trackRenderersBuilder = getTrackRenderersBuilder(context, uri);
+  }
+
+  private void renderTracks(String uri) {
+    this.trackRenderersBuilder = createTrackRenderersBuilder(context, uri);
     this.trackRenderersBuilder.build(new TrackRenderersBuilder.Callback() {
       @Override
       public void onFinish(TrackRenderer[] trackRenderers) {
-        Log.d(TAG, "onFinish...track renderers built");
+        Log.d(TAG, "renderTracks...track renderers built");
         for (int i = 0; i < TrackRenderersBuilder.TRACK_RENDER_COUNT; i++) {
           if (trackRenderers[i] == null) {
             // Convert a null renderer to a dummy renderer.
@@ -103,6 +140,7 @@ public class MediaPlayerController implements TextureView.SurfaceTextureListener
           }
         }
         videoTrackRenderer = trackRenderers[TrackRenderersBuilder.TRACK_VIDEO_INDEX];
+
         exoPlayer.prepare(trackRenderers);
 
         if (surfaceTexture != null) {
@@ -112,18 +150,16 @@ public class MediaPlayerController implements TextureView.SurfaceTextureListener
 
       @Override
       public void onError(Exception e) {
-        Log.e(TAG, "onError...failed to build track renderers", e);
+        Log.e(TAG, "renderTracks...failed to build track renderers", e);
         notifyError(e);
       }
     });
   }
 
-  private TrackRenderersBuilder getTrackRenderersBuilder(Context context, String uriString) {
-    Uri uri = Uri.parse(uriString);
-
-    String lastPathSegment = uri.getLastPathSegment();
-    int contentType = Util.inferContentType(lastPathSegment);
-    String userAgent = Util.getUserAgent(context, "LNMediaPlayer");
+  private TrackRenderersBuilder createTrackRenderersBuilder(Context context, String uriString) {
+    final Uri uri = Uri.parse(uriString);
+    final int contentType = Util.inferContentType(uri.getLastPathSegment());
+    final String userAgent = Util.getUserAgent(context, "react-native-media-kit");
 
     switch (contentType) {
       case Util.TYPE_DASH:
@@ -139,16 +175,24 @@ public class MediaPlayerController implements TextureView.SurfaceTextureListener
     }
   }
 
-  public MediaController.MediaPlayerControl getPlayerControl() {
-    return playerControl;
+  public void setLoop(boolean loop) {
+    this.loop = loop;
+  }
+
+  public void setPlayWhenReady(boolean playWhenReady) {
+    exoPlayer.setPlayWhenReady(playWhenReady);
   }
 
   public void play() {
     Log.d(TAG, "play...");
-    if(ended) {
+    exoPlayer.setPlayWhenReady(true);
+    if (ended) {
       seekTo(0);
     }
-    exoPlayer.setPlayWhenReady(true);
+
+    if(trackRenderersBuilder == null) {
+      prepareToPlay();
+    }
   }
 
   public void pause() {
@@ -161,6 +205,19 @@ public class MediaPlayerController implements TextureView.SurfaceTextureListener
     exoPlayer.seekTo(positionMs);
   }
 
+  public void stop() {
+    Log.d(TAG, "stop...");
+    exoPlayer.stop();
+  }
+
+  public long getCurrentPosition() {
+    return exoPlayer.getCurrentPosition();
+  }
+
+  public long getDuration() {
+    return exoPlayer.getDuration();
+  }
+
   public void release() {
     if (trackRenderersBuilder != null) {
       trackRenderersBuilder.cancel();
@@ -171,8 +228,6 @@ public class MediaPlayerController implements TextureView.SurfaceTextureListener
       surfaceTexture = null;
     }
     exoPlayer.release();
-
-    //TODO release surface?
   }
 
   private void setSurface(Surface surface) {
@@ -192,23 +247,10 @@ public class MediaPlayerController implements TextureView.SurfaceTextureListener
     setSurface(surfaceTexture == null ? null : new Surface(surfaceTexture));
   }
 
-  public View getView() {
+  public final View getView() {
+    if(textureView == null) {
+       }
     return aspectRatioFrameLayout;
-  }
-
-  public void prepareSurface() {
-    initTextureView();
-  }
-
-  private void initTextureView() {
-    aspectRatioFrameLayout.removeAllViews();
-    TextureView textureView = new TextureView(aspectRatioFrameLayout.getContext());
-    textureView.setSurfaceTextureListener(this);
-    aspectRatioFrameLayout.addView(textureView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
-    if(surfaceTexture != null) {
-      textureView.setSurfaceTexture(surfaceTexture);
-    }
   }
 
   public void addEventListener(EventListener listener) {
@@ -229,34 +271,6 @@ public class MediaPlayerController implements TextureView.SurfaceTextureListener
     }
   }
 
-  @Override
-  public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-    Log.d(TAG, "onSurfaceTextureAvailable...w=" + width + ", h=" + height + ", surface=" + surface);
-    setSurfaceTexture(surface);
-  }
-
-  @Override
-  public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-    Log.d(TAG, "onSurfaceTextureSizeChanged...w=" + width + ", h=" + height);
-  }
-
-  /**
-   * Invoked when the specified {@link SurfaceTexture} is about to be destroyed.
-   * If returns true, no rendering should happen inside the surface texture after this method
-   * is invoked. If returns false, the client needs to call {@link SurfaceTexture#release()}.
-   * Most applications should return true.
-   *
-   * @param surface The surface about to be destroyed
-   */
-  @Override
-  public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-    Log.i(TAG, "onSurfaceTextureDestroyed...");
-    return false; //TODO
-  }
-
-  @Override
-  public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-  }
 
 
 
@@ -290,6 +304,7 @@ public class MediaPlayerController implements TextureView.SurfaceTextureListener
     @Override
     public void onDrawnToSurface(Surface surface) {
       Log.i(TAG, "onDrawnToSurface...");
+      
     }
 
     @Override
@@ -354,8 +369,11 @@ public class MediaPlayerController implements TextureView.SurfaceTextureListener
   }
 
   private void notifyPlayerStateChanged(boolean playWhenReady, int playbackState) {
-    if(playbackState == ExoPlayer.STATE_ENDED) {
+    if (playbackState == ExoPlayer.STATE_ENDED) {
       ended = true;
+      if(loop) {
+        exoPlayer.seekTo(0);
+      }
     } else {
       ended = false;
     }
@@ -373,6 +391,7 @@ public class MediaPlayerController implements TextureView.SurfaceTextureListener
       }
     }
   }
+
 
   public interface EventListener {
     void onError(Exception e);
@@ -406,6 +425,7 @@ public class MediaPlayerController implements TextureView.SurfaceTextureListener
 
     /**
      * Invoked each time there is a metadata associated with current playback time.
+     *
      * @param metadata
      */
     void onMetadata(List<Id3Frame> metadata);

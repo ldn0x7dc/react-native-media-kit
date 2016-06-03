@@ -33,6 +33,8 @@ public class ReactMediaPlayerViewManager extends SimpleViewManager<ReactMediaPla
   public static final int CMD_PLAY = 1;
   public static final int CMD_PAUSE = 2;
   public static final int CMD_SEEK_TO = 3;
+  public static final int CMD_STOP = 4;
+
 
   @Override
   public String getName() {
@@ -41,26 +43,31 @@ public class ReactMediaPlayerViewManager extends SimpleViewManager<ReactMediaPla
 
   @Override
   protected ReactMediaPlayerView createViewInstance(ThemedReactContext reactContext) {
-    SeekBar b;
     return new ReactMediaPlayerView(reactContext);
   }
 
-  @ReactProp(name = "uri")
-  public void setUri(ReactMediaPlayerView view, @Nullable String uri) {
-    Log.d(TAG, "setUri...uri=" + uri);
+  @ReactProp(name = "src")
+  public void setSrc(ReactMediaPlayerView view, @Nullable String uri) {
+    Log.d(TAG, "setSrc...src=" + uri);
     view.setUri(uri);
   }
 
-  @ReactProp(name = "backgroundPlay", defaultBoolean = false)
-  public void setBackgroundPlay(ReactMediaPlayerView view, boolean backgroundPlay) {
-    Log.d(TAG, "setBackgroundPlay...backgroundPlay=" + backgroundPlay);
-//    view.setBackgroundPlay(backgroundPlay);
+  @ReactProp(name = "preload")
+  public void setPreload(ReactMediaPlayerView view, @Nullable String preload) {
+    Log.d(TAG, "setPreload...preload=" + preload);
+    view.setPreload(preload);
   }
 
   @ReactProp(name = "autoplay", defaultBoolean = false)
-  public void setPlayWhenReady(ReactMediaPlayerView view, boolean playWhenReady) {
-    Log.d(TAG, "setPlayWhenReady...playWhenReady=" + playWhenReady);
-//    view.setPlayWhenReady(playWhenReady);
+  public void setAutoplay(ReactMediaPlayerView view, boolean autoplay) {
+    Log.d(TAG, "setAutoplay...autoplay=" + autoplay);
+    view.setAutoplay(autoplay);
+  }
+
+  @ReactProp(name = "loop", defaultBoolean = false)
+  public void setLoop(ReactMediaPlayerView view, boolean loop) {
+    Log.d(TAG, "setLoop...loop=" + loop);
+    view.setLoop(loop);
   }
 
   ////////////////////////////////
@@ -189,7 +196,8 @@ public class ReactMediaPlayerViewManager extends SimpleViewManager<ReactMediaPla
     return MapBuilder.of(
       "play", CMD_PLAY,
       "pause", CMD_PAUSE,
-      "seekTo", CMD_SEEK_TO);
+      "seekTo", CMD_SEEK_TO,
+       "stop", CMD_STOP);
   }
 
   @Override
@@ -204,6 +212,9 @@ public class ReactMediaPlayerViewManager extends SimpleViewManager<ReactMediaPla
         break;
       case CMD_SEEK_TO:
         root.getMediaPlayerController().seekTo((long) args.getDouble(0));
+        break;
+      case CMD_STOP:
+        root.getMediaPlayerController().stop();
         break;
       default:
         break;

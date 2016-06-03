@@ -74,15 +74,6 @@ export default class Controls extends React.Component {
   }
 
   render() {
-    //return (
-    //  <Slider
-    //    maximumTrackTintColor={'#a1a1a1'}
-    //    minimumTrackTintColor={'white'}
-    //    style={{position: 'absolute', left: 0, top: 0, right: 0, bottom: 0, flexDirection: 'column'}}
-    //  />
-    //);
-
-
     let containHours = this.props.total >= 60 * 60 * 1000;
     let currentFormated = formatProgress(this.state.current / 1000, containHours);
     let totalFormated = formatProgress(this.props.total / 1000, containHours);
@@ -114,6 +105,7 @@ export default class Controls extends React.Component {
             maximumTrackTintColor={'#a1a1a1'}
             minimumTrackTintColor={'white'}
             style={{flex: 1, marginHorizontal: 5}}
+            thumbImage={require('./img/media-player-thumb.png')}
 
             onSlidingComplete={(value) => {
               this.setState({
@@ -155,12 +147,14 @@ class ActivityIndicator extends React.Component {
         );
       }
     } else if (Platform.OS === 'ios') {
-      return (
-        <ActivityIndicatorIOS
-          size={'large'}
-          animating={this.props.animating}
-        />
-      );
+      if (this.props.animating) {
+        return (
+          <ActivityIndicatorIOS
+            size={'large'}
+            animating={true}
+          />
+        );
+      }
     }
     return null;
   }

@@ -111,7 +111,7 @@
   if(self.autoplay) {
     playerController.shouldAutoplay = YES;
     playerController.contentURL = [NSURL URLWithString:self.src];
-    [playerController prepareToPlay];
+    [self prepareToPlay];
   } else {
     playerController.shouldAutoplay = NO;
     if(self.preload) {
@@ -121,9 +121,19 @@
         playerController.contentURL = [NSURL URLWithString:self.src];
       } else if([self.preload isEqualToString:@"auto"]) {
         playerController.contentURL = [NSURL URLWithString:self.src];
-        [playerController prepareToPlay];
+        [self prepareToPlay];
       }
     }
+  }
+}
+
+- (void) prepareToPlay {
+  if(playerController) {
+    //simulate buffering event
+    if(self.onPlayerBuffering) {
+      self.onPlayerBuffering(nil);
+    }
+    [playerController prepareToPlay];
   }
 }
 
@@ -251,6 +261,7 @@
   if(!playerController.contentURL && self.src) {
     NSLog(@"play...assign src=%@", self.src);
     playerController.contentURL = [NSURL URLWithString:self.src];
+    [self prepareToPlay];
   }
   playerController.shouldAutoplay = YES;
   [playerController play];

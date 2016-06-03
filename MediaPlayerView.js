@@ -46,7 +46,7 @@ export default class MediaPlayerView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      buffering: true,
+      buffering: false,
       playing: false,
       current: 0,
       total: 0,

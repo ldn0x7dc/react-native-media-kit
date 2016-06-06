@@ -207,11 +207,14 @@ public class ReactMediaPlayerView extends FrameLayout implements LifecycleEventL
   }
 
   private void notifyProgress() {
-    long current = playerController.getCurrentPosition();
-    long total = playerController.getDuration();
-    if (mediaPlayerListener != null) {
-      mediaPlayerListener.onPlayerProgress(current, total);
+    if(playerController != null) {
+      long current = playerController.getCurrentPosition();
+      long total = playerController.getDuration();
+      if (mediaPlayerListener != null) {
+        mediaPlayerListener.onPlayerProgress(current, total);
+      }
     }
+
   }
 
   private Runnable onProgress = new Runnable() {

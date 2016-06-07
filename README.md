@@ -1,6 +1,14 @@
 # react-native-media-kit
 
-Html `<Video />` and `<Audio />` components from react-native for both iOS and Android. Hope you enjoy it!
+Html `<Video />` and `<Audio />` components from react-native for both iOS and Android. 
+
+Supported media types:
+
+​	iOS: Should be same as those supported by [MPMoviePlayerController](https://developer.apple.com/library/ios/documentation/MediaPlayer/Reference/MPMoviePlayerController_Class/)
+
+​	Android: Shold be same as those supported by [ExoPlayer](https://github.com/google/ExoPlayer)
+
+![](demo/demo.gif).
 
 ## Install
 

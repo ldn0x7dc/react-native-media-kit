@@ -1,11 +1,25 @@
 {
   "name": "react-native-media-kit",
   "version": "0.0.5",
-  "description": "",
+  "description": "Html `<Video />` and `<Audio />` components from react-native for both iOS and Android. Hope you enjoy it!",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yoaicom/react-native-media-kit.git"
+  },
+  "keywords": [
+    "video",
+    "audio",
+    "media",
+    "react-native"
+  ],
+  "bugs": {
+    "url": "https://github.com/yoaicom/react-native-media-kit/issues"
+  },
+  "homepage": "https://github.com/yoaicom/react-native-media-kit#readme"
 }

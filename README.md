@@ -1,14 +1,14 @@
 # react-native-media-kit
 
-Html **<Video />** and **<Audio />** components from react-native for both iOS and Android. Hope you enjoy it!
+Html `<Video />` and `<Audio />` components from react-native for both iOS and Android. Hope you enjoy it!
 
-### Install
+## Install
 
 Run `npm install react-native-media-kit@latest —-save`
 
 #### iOS
 
-For now, just drag our ***react-native-media-kit.xcodeproj*** file into your Xcode project and that's all.
+For now, just drag our ***react-native-media-kit.xcodeproj*** file into your Xcode project and link the **libreact-native-media-kit.a** library.
 
 We're working on Cocoapods specs.
 
@@ -43,9 +43,7 @@ protected List<ReactPackage> getPackages() {
 }
 ```
 
-
-
-### Usage
+## Usage
 
 Just use it like the [HTML <video> element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video)
 
@@ -98,5 +96,5 @@ We provide a limited set of props and methods comparing to the  [HTML <video> 
 
 
 
-***We'r working on a more detailed documentation. Please wait.***
+***We're working on a more detailed documentation. Please wait.***
 

@@ -1,6 +1,6 @@
 {
   "name": "react-native-media-kit",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Html `<Video />` and `<Audio />` components from react-native for both iOS and Android. Hope you enjoy it!",
   "main": "index.js",
   "scripts": {

@@ -183,6 +183,10 @@ public class MediaPlayerController {
     exoPlayer.setPlayWhenReady(playWhenReady);
   }
 
+  public boolean getPlayWhenReady() {
+    return exoPlayer.getPlayWhenReady();
+  }
+
   public void play() {
     Log.d(TAG, "play...");
     exoPlayer.setPlayWhenReady(true);

@@ -33,6 +33,8 @@ public class ReactMediaPlayerView extends FrameLayout implements LifecycleEventL
   private boolean autoplay;
   private String preload;
 
+  private boolean playWhenReadySnapshot;
+
   private MediaPlayerListener mediaPlayerListener;
 
   public ReactMediaPlayerView(Context context) {
@@ -192,12 +194,15 @@ public class ReactMediaPlayerView extends FrameLayout implements LifecycleEventL
   @Override
   public void onHostResume() {
     Log.d(TAG, "onHostResume...");
-    playerController.play();
+    if(playWhenReadySnapshot) {
+      playerController.play();
+    }
   }
 
   @Override
   public void onHostPause() {
     Log.d(TAG, "onHostPause...");
+    playWhenReadySnapshot = playerController.getPlayWhenReady();
     playerController.pause();
   }
 

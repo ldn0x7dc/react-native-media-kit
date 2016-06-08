@@ -28,7 +28,7 @@ Modify as follow:
 
 ```
 include ':react-native-media-kit'
-project(':react-native-media-kit').projectDir = new File('/Users/ldn/Coding/repo/react-native-media-kit/android')
+project(':react-native-media-kit').projectDir = new File('../node_modules/react-native-media-kit/android')
 ```
 
 **android/app/build.gradle**
@@ -43,6 +43,8 @@ dependencies {
 **MainActivity.java**
 
 ```
+import com.yoai.reactnative.media.MediaKitPackage;
+...
 protected List<ReactPackage> getPackages() {
     return Arrays.<ReactPackage>asList(
         new MainReactPackage(),

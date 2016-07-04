@@ -11,8 +11,7 @@ import ReactNative, {
   ScrollView,
   Image,
   Platform,
-  ProgressBarAndroid,
-  ActivityIndicatorIOS,
+  ActivityIndicator,
   Slider
 } from 'react-native';
 
@@ -78,12 +77,18 @@ export default class Controls extends React.Component {
     let currentFormated = formatProgress(this.state.current / 1000, containHours);
     let totalFormated = formatProgress(this.props.total / 1000, containHours);
 
+    let bufferIndicator;
+    if(this.props.buffering) {
+      bufferIndicator = (
+        <ActivityIndicator
+          color={'#f2f2f2'}
+          size={'large'}/>
+      );
+    }
     return (
       <View
         style={{position: 'absolute', left: 0, top: 0, right: 0, bottom: 0, flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-        <ActivityIndicator
-          animating={this.props.buffering}
-        />
+        {bufferIndicator}
         <View
           style={{position: 'absolute', left: 0, right: 0, bottom: 0, height: 40, backgroundColor: '#00000033', flexDirection: 'row'}}>
 
@@ -123,7 +128,7 @@ export default class Controls extends React.Component {
             maximumValue={this.props.total}
             minimumValue={0}
             value={this.state.sliding? 0 : this.state.current}
-            />
+          />
 
           <Text
             style={{alignSelf: 'center', fontSize: 12, color: 'white', width: totalFormated.length == 5 ? 35:56, marginRight: 10}}>
@@ -136,26 +141,26 @@ export default class Controls extends React.Component {
   }
 }
 
-class ActivityIndicator extends React.Component {
-  render() {
-    if (Platform.OS === 'android') {
-      if (this.props.animating) {
-        return (
-          <ProgressBarAndroid
-            styleAttr={'Large'}
-            indeterminate={true}/>
-        );
-      }
-    } else if (Platform.OS === 'ios') {
-      if (this.props.animating) {
-        return (
-          <ActivityIndicatorIOS
-            size={'large'}
-            animating={true}
-          />
-        );
-      }
-    }
-    return null;
-  }
-}
+//class ActivityIndicator extends React.Component {
+//  render() {
+//    if (Platform.OS === 'android') {
+//      if (this.props.animating) {
+//        return (
+//          <ProgressBarAndroid
+//            styleAttr={'Large'}
+//            indeterminate={true}/>
+//        );
+//      }
+//    } else if (Platform.OS === 'ios') {
+//      if (this.props.animating) {
+//        return (
+//          <ActivityIndicatorIOS
+//            size={'large'}
+//            animating={true}
+//          />
+//        );
+//      }
+//    }
+//    return null;
+//  }
+//}

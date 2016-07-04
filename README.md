@@ -1,6 +1,6 @@
 # react-native-media-kit
 
-Video component for react-native apps, supporting both iOS and Android. 
+Video and Audio component for react-native apps, supporting both iOS and Android. 
 
 Supported media types:
 

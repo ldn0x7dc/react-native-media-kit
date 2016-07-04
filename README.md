@@ -2,7 +2,7 @@
 
 Video and Audio component for react-native apps, supporting both iOS and Android. 
 
-Supported media types:
+Runs on react-native 0.28+. Supported media types:
 
 * iOS: Should be same as those supported by [MPMoviePlayerController](https://developer.apple.com/library/ios/documentation/MediaPlayer/Reference/MPMoviePlayerController_Class/)
 

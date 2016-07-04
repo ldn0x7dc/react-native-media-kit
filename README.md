@@ -9,7 +9,7 @@ Supported media types:
 
 * Android: Shold be same as those supported by [ExoPlayer](https://github.com/google/ExoPlayer)
 
-![](demo/demo.png).
+![](Demo/demo.png).
 
 ## Install
 

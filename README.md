@@ -1,14 +1,15 @@
 # react-native-media-kit
 
-Html `<Video />` and `<Audio />` components from react-native for both iOS and Android. 
+Video component for react-native apps, supporting both iOS and Android. 
 
 Supported media types:
 
-​	iOS: Should be same as those supported by [MPMoviePlayerController](https://developer.apple.com/library/ios/documentation/MediaPlayer/Reference/MPMoviePlayerController_Class/)
+* iOS: Should be same as those supported by [MPMoviePlayerController](https://developer.apple.com/library/ios/documentation/MediaPlayer/Reference/MPMoviePlayerController_Class/)
 
-​	Android: Shold be same as those supported by [ExoPlayer](https://github.com/google/ExoPlayer)
 
-![](demo/demo.gif).
+* Android: Shold be same as those supported by [ExoPlayer](https://github.com/google/ExoPlayer)
+
+![](demo/demo.png).
 
 ## Install
 
@@ -55,9 +56,11 @@ protected List<ReactPackage> getPackages() {
 
 ## Usage
 
-Just use it like the [HTML <video> element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video)
+Quite same as the the HTML <Video />:
 
 ```
+import {Video} from 'react-native-media-kit';
+...
 <Video
   style={{width: width, height: width / (16/9)}}
   src={'http://v.yoai.com/femme_tampon_tutorial.mp4'}
@@ -65,6 +68,7 @@ Just use it like the [HTML <video> element](https://developer.mozilla.org/en-U
   preload={'none'}
   loop={false}
   controls={true}
+  poster={'http://static.yoaicdn.com/shoppc/images/cover_img_e1e9e6b.jpg'}
 />
 ```
 
@@ -72,28 +76,29 @@ Just use it like the [HTML <video> element](https://developer.mozilla.org/en-U
 
 ### API
 
-We provide a limited set of props and methods comparing to the  [HTML <video> element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video)
+The API is designed to mimics [html <Video />](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video). 
 
 ##### Properties
 
 | key          | value                                    | iOS  | Android |
 | ------------ | ---------------------------------------- | ---- | ------- |
-| **src**      |                                          | OK   | OK      |
+| **src**      | The URL of the video                     | OK   | OK      |
 | **autoplay** | A Boolean attribute; if specified, the video automatically begins to play back as soon as it's ready | OK   | OK      |
 | **preload**  | A String attribute: can be 'none', 'metadata'(iOS only), 'auto' | OK   | OK      |
 | **loop**     | A Boolean attribute; if specified, we will, upon reaching the end of the video, automatically seek back to the start. | OK   | OK      |
 | **controls** | A Boolean attribute; if specifid, will offer controls to allow the user to control video playback, including seeking, and pause/resume playback. | OK   | OK      |
+| poster       | A URL indicating a poster frame to show until the user plays. | OK   | OK      |
 
 ##### Callbacks
 
-| key                   |      | iOS  | Android |
-| --------------------- | ---- | ---- | ------- |
-| **onPlayerPaused**    |      | OK   | OK      |
-| **onPlayerPlaying**   |      | OK   | OK      |
-| **onPlayerFinished**  |      | OK   | OK      |
-| **onPlayerBuffering** |      | OK   | OK      |
-| **onPlayerBufferOK**  |      | OK   | OK      |
-| **onPlayerProgress**  |      | OK   | OK      |
+| key                   |                  | iOS  | Android |
+| --------------------- | :--------------: | ---- | ------- |
+| **onPlayerPaused**    | As the same says | OK   | OK      |
+| **onPlayerPlaying**   |                  | OK   | OK      |
+| **onPlayerFinished**  |                  | OK   | OK      |
+| **onPlayerBuffering** |                  | OK   | OK      |
+| **onPlayerBufferOK**  |                  | OK   | OK      |
+| **onPlayerProgress**  |                  | OK   | OK      |
 
 ##### Methods
 
@@ -105,6 +110,5 @@ We provide a limited set of props and methods comparing to the  [HTML <video> 
 
 
 
-
-***We're working on a more detailed documentation. Please wait.***
+## Attention
 

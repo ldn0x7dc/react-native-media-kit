@@ -48,6 +48,7 @@ public class ReactMediaPlayerView extends FrameLayout implements LifecycleEventL
 
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+      Log.d(TAG, "onPlayerStateChanged..." + uri);
       Log.d(TAG, "onPlayerStateChanged...playWhenReady=" + playWhenReady + ", state=" + descPlaybackState(playbackState));
       if (mediaPlayerListener != null) {
         switch (playbackState) {
@@ -187,6 +188,8 @@ public class ReactMediaPlayerView extends FrameLayout implements LifecycleEventL
     if (getContext() instanceof ReactContext) {
       ((ReactContext) getContext()).addLifecycleEventListener(this);
     }
+
+    mediaPlayerControllerOwner.requestOwnership(getContext());
   }
 
   @Override

@@ -21,16 +21,17 @@ export default class App extends Component {
 
         <Video
           style={{width: width, height: width / (16/9), marginTop: 50, backgroundColor: 'black'}}
-          autoplay={false}
+          autoplay={true}
           preload='none'
           loop={false}
           controls={true}
           src={'http://192.168.100.18:3000/videos/femme_tampon_tutorial.mp4'}
+          poster={'http://static.yoaicdn.com/shoppc/images/cover_img_e1e9e6b.jpg'}
         />
 
         <Video
           style={{width: width, height: width / (16/9), marginTop: 50, backgroundColor: 'black'}}
-          autoplay={false}
+          autoplay={true}
           preload='none'
           loop={false}
           controls={true}

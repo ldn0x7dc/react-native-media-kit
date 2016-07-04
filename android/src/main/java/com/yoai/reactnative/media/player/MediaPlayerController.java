@@ -54,9 +54,6 @@ public class MediaPlayerController {
   private TrackRenderersBuilder trackRenderersBuilder;
   private TrackRenderer videoTrackRenderer;
 
-  private Boolean playWhenReadyToRestore;
-
-
   private final AspectRatioFrameLayout aspectRatioFrameLayout;
   private TextureView textureView;
   private SurfaceTexture surfaceTexture;
@@ -246,14 +243,12 @@ public class MediaPlayerController {
     }
   }
 
-  private void setSurfaceTexture(SurfaceTexture surfaceTexture) {
+  public void setSurfaceTexture(SurfaceTexture surfaceTexture) {
     this.surfaceTexture = surfaceTexture;
     setSurface(surfaceTexture == null ? null : new Surface(surfaceTexture));
   }
 
   public final View getView() {
-    if(textureView == null) {
-       }
     return aspectRatioFrameLayout;
   }
 
@@ -261,10 +256,6 @@ public class MediaPlayerController {
     synchronized (eventListeners) {
       eventListeners.add(listener);
     }
-  }
-
-  public ExoPlayer getExoPlayer() {
-    return exoPlayer;
   }
 
   public void removeEventListener(EventListener listener) {

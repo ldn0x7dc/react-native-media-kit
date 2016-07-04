@@ -26,7 +26,8 @@ public class ReactMediaPlayerView extends FrameLayout implements LifecycleEventL
     }
   };
 
-  private MediaPlayerController playerController;
+  private MediaPlayerControllerOwner mediaPlayerControllerOwner;
+  private MediaPlayerController mediaPlayerController;
 
   private String uri;
   private boolean loop;
@@ -34,74 +35,98 @@ public class ReactMediaPlayerView extends FrameLayout implements LifecycleEventL
   private String preload;
 
   private boolean playWhenReadySnapshot;
+  private long playPositionSnapshot = 0;
 
   private MediaPlayerListener mediaPlayerListener;
 
-  public ReactMediaPlayerView(Context context) {
+  private final MediaPlayerController.BaseEventListener l = new MediaPlayerController.BaseEventListener() {
+
+    @Override
+    public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
+      measureAndLayout.run();
+    }
+
+    @Override
+    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+      Log.d(TAG, "onPlayerStateChanged...playWhenReady=" + playWhenReady + ", state=" + descPlaybackState(playbackState));
+      if (mediaPlayerListener != null) {
+        switch (playbackState) {
+          case ExoPlayer.STATE_BUFFERING:
+            if (!playWhenReady) {
+              mediaPlayerListener.onPlayerPaused();
+            }
+          case ExoPlayer.STATE_PREPARING:
+            mediaPlayerListener.onPlayerBuffering();
+            break;
+          case ExoPlayer.STATE_ENDED:
+            notifyProgress();
+            mediaPlayerListener.onPlayerFinished();
+            break;
+          case ExoPlayer.STATE_IDLE:
+            break;
+          case ExoPlayer.STATE_READY:
+            mediaPlayerListener.onPlayerBufferReady();
+            if (playWhenReady) {
+              mediaPlayerListener.onPlayerPlaying();
+            } else {
+              mediaPlayerListener.onPlayerPaused();
+            }
+            break;
+          default:
+            break;
+        }
+      }
+
+      if (playbackState == ExoPlayer.STATE_READY) {
+        notifyProgress();
+      }
+      if (playbackState == ExoPlayer.STATE_READY && mediaPlayerController != null && mediaPlayerController.getPlayWhenReady()) {
+        startProgressTimer();
+      } else {
+        stopProgressTimer();
+      }
+    }
+  };
+
+  public ReactMediaPlayerView(final Context context) {
     super(context);
+
+    mediaPlayerControllerOwner = new MediaPlayerControllerOwner() {
+
+      @Override
+      public void onOwnershipChanged(MediaPlayerControllerOwner owner, MediaPlayerController controller) {
+        Log.d(TAG, "onOwnershipChanged..." + uri);
+        if (owner == mediaPlayerControllerOwner) {
+          Log.d(TAG, "onOwnershipChanged...add view");
+          controller.addEventListener(l);
+          mediaPlayerController = controller;
+          addView(controller.getView(), new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER));
+          updateProps(controller);
+          if(playPositionSnapshot > 0) {
+            controller.seekTo(playPositionSnapshot);
+          }
+        } else {
+          Log.d(TAG, "onOwnershipChanged...remove view");
+          if(mediaPlayerController != null) {
+            playPositionSnapshot = mediaPlayerController.getCurrentPosition();
+            mediaPlayerController.removeEventListener(l);
+            mediaPlayerController.setSurfaceTexture(null);
+            mediaPlayerController.setContentUri(null);
+            removeView(mediaPlayerController.getView());
+          }
+
+          stopProgressTimer();
+          if (mediaPlayerListener != null) {
+            mediaPlayerListener.onPlayerFinished();
+          }
+          mediaPlayerController = null;
+        }
+      }
+    };
   }
 
   public MediaPlayerController getMediaPlayerController() {
-    return playerController;
-  }
-
-
-  private void initPlayerControllerIfNeeded() {
-    if(playerController == null) {
-      playerController = new MediaPlayerController(getContext());
-      addView(playerController.getView(), new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER));
-
-      playerController.addEventListener(new MediaPlayerController.BaseEventListener() {
-
-        @Override
-        public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
-          measureAndLayout.run();
-        }
-
-        @Override
-        public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-          Log.d(TAG, "onPlayerStateChanged...playWhenReady=" + playWhenReady + ", state=" + descPlaybackState(playbackState));
-          if (mediaPlayerListener != null) {
-            switch (playbackState) {
-              case ExoPlayer.STATE_BUFFERING:
-                if(!playWhenReady) {
-                  mediaPlayerListener.onPlayerPaused();
-                }
-              case ExoPlayer.STATE_PREPARING:
-                mediaPlayerListener.onPlayerBuffering();
-                break;
-              case ExoPlayer.STATE_ENDED:
-                notifyProgress();
-                mediaPlayerListener.onPlayerFinished();
-                break;
-              case ExoPlayer.STATE_IDLE:
-                break;
-              case ExoPlayer.STATE_READY:
-                mediaPlayerListener.onPlayerBufferReady();
-                if (playWhenReady) {
-                  mediaPlayerListener.onPlayerPlaying();
-                } else {
-                  mediaPlayerListener.onPlayerPaused();
-                }
-                break;
-              default:
-                break;
-            }
-          }
-
-          if (playbackState == ExoPlayer.STATE_READY) {
-            notifyProgress();
-          }
-          if (playbackState == ExoPlayer.STATE_READY && playerController.getExoPlayer().getPlayWhenReady()) {
-            startProgressTimer();
-          } else {
-            stopProgressTimer();
-          }
-        }
-      });
-
-      updateProps();
-    }
+    return mediaPlayerControllerOwner.requestOwnership(getContext());
   }
 
   //for debug info
@@ -124,44 +149,33 @@ public class ReactMediaPlayerView extends FrameLayout implements LifecycleEventL
 
   public void setUri(String uri) {
     this.uri = uri;
-
-    updateProps();
   }
 
   public void setLoop(boolean loop) {
     this.loop = loop;
-
-    updateProps();
   }
 
   public void setPreload(String preload) {
     this.preload = preload;
-
-    updateProps();
   }
 
   public void setAutoplay(boolean autoplay) {
     this.autoplay = autoplay;
-
-    updateProps();
   }
 
-  private void updateProps() {
-    if(playerController == null)
-      return;
-    playerController.setLoop(loop);
-    playerController.setContentUri(uri);
-    if(uri == null) {
-      return;
-    }
+  private void updateProps(MediaPlayerController playerController) {
+    if (playerController != null) {
+      playerController.setLoop(loop);
+      playerController.setContentUri(uri);
 
-    if(autoplay) {
-      playerController.setPlayWhenReady(true);
-      playerController.prepareToPlay();
-    } else {
-      playerController.setPlayWhenReady(false);
-      if(preload != null && preload.equals("auto")) {
+      if (autoplay) {
+        playerController.setPlayWhenReady(true);
         playerController.prepareToPlay();
+      } else {
+        playerController.setPlayWhenReady(false);
+        if (preload != null && preload.equals("auto")) {
+          playerController.prepareToPlay();
+        }
       }
     }
   }
@@ -173,8 +187,6 @@ public class ReactMediaPlayerView extends FrameLayout implements LifecycleEventL
     if (getContext() instanceof ReactContext) {
       ((ReactContext) getContext()).addLifecycleEventListener(this);
     }
-
-    initPlayerControllerIfNeeded();
   }
 
   @Override
@@ -184,42 +196,42 @@ public class ReactMediaPlayerView extends FrameLayout implements LifecycleEventL
     if (getContext() instanceof ReactContext) {
       ((ReactContext) getContext()).removeLifecycleEventListener(this);
     }
-
-    if(playerController != null) {
-      playerController.release();
-      playerController = null;
-    }
+    mediaPlayerControllerOwner.abandonOwnership();
   }
 
   @Override
   public void onHostResume() {
     Log.d(TAG, "onHostResume...");
-    if(playWhenReadySnapshot) {
-      playerController.play();
+    if (playWhenReadySnapshot) {
+      if(mediaPlayerController != null) {
+        mediaPlayerController.play();
+      }
     }
   }
 
   @Override
   public void onHostPause() {
     Log.d(TAG, "onHostPause...");
-    playWhenReadySnapshot = playerController.getPlayWhenReady();
-    playerController.pause();
+    if(mediaPlayerController != null) {
+      playWhenReadySnapshot = mediaPlayerController.getPlayWhenReady();
+      mediaPlayerController.pause();
+    }
   }
 
   @Override
   public void onHostDestroy() {
     Log.d(TAG, "onHostDestroy...");
+    mediaPlayerControllerOwner.abandonOwnership();
   }
 
   private void notifyProgress() {
-    if(playerController != null) {
-      long current = playerController.getCurrentPosition();
-      long total = playerController.getDuration();
+    if (mediaPlayerController != null) {
+      long current = mediaPlayerController.getCurrentPosition();
+      long total = mediaPlayerController.getDuration();
       if (mediaPlayerListener != null) {
         mediaPlayerListener.onPlayerProgress(current, total);
       }
     }
-
   }
 
   private Runnable onProgress = new Runnable() {
@@ -255,5 +267,43 @@ public class ReactMediaPlayerView extends FrameLayout implements LifecycleEventL
 
   public void setMediaPlayerListener(MediaPlayerListener listener) {
     this.mediaPlayerListener = listener;
+  }
+
+  private static abstract class MediaPlayerControllerOwner {
+    private static MediaPlayerController mediaPlayerController;
+    private static MediaPlayerControllerOwner activeOwner;
+
+    public MediaPlayerControllerOwner() {
+    }
+
+    public final void abandonOwnership() {
+      if(activeOwner == this) {
+        onOwnershipChanged(null, null);
+        activeOwner = null;
+        if(mediaPlayerController != null) {
+          mediaPlayerController.release();
+          mediaPlayerController = null;
+        }
+      }
+    }
+
+    public abstract void onOwnershipChanged(MediaPlayerControllerOwner owner, MediaPlayerController controller);
+
+
+    public MediaPlayerController requestOwnership(Context context) {
+      if (mediaPlayerController == null) {
+        mediaPlayerController = new MediaPlayerController(context);
+      }
+
+      if (activeOwner != this) {
+        if (activeOwner != null) {
+          activeOwner.onOwnershipChanged(this, mediaPlayerController);
+        }
+        activeOwner = this;
+        this.onOwnershipChanged(this, mediaPlayerController);
+      }
+
+      return mediaPlayerController;
+    }
   }
 }

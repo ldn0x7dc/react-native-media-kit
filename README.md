@@ -108,4 +108,5 @@ The API is designed to mimics [html <Video />](https://developer.mozilla.org/en-
 
 ## TODO
 
-* mute feature(Not possilble for MPMoviePlayerController)
+* switch to AVPlayer (since MPMoviePlayerController is deprecated on iOS 9)
+* mute feature (Not possilble for MPMoviePlayerController)

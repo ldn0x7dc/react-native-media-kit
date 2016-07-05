@@ -72,7 +72,7 @@ import {Video} from 'react-native-media-kit';
 
 ### API
 
-The API is designed to mimics [html <Video />](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video). 
+The API is designed to mimics [html <Video />](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video).  For now, the Video and Audio component are identical.
 
 ##### Properties
 

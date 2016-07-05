@@ -13,17 +13,13 @@ Runs on react-native 0.28+. Supported media types:
 
 ## Install
 
-Run `npm install —-save react-native-media-kit@latest `
+`npm install —-save react-native-media-kit@latest `
 
 #### iOS
 
-For now, just drag our ***react-native-media-kit.xcodeproj*** file into your Xcode project and link the **libreact-native-media-kit.a** library.
-
-We're working on Cocoapods specs.
+For now, just drag ***react-native-media-kit.xcodeproj*** into your Xcode project and link the **libreact-native-media-kit.a** library.
 
 #### Android
-
-Modify as follow:
 
 **android/settings.gradle**
 
@@ -54,7 +50,9 @@ protected List<ReactPackage> getPackages() {
 }
 ```
 
-## Usage
+
+
+## Documentation
 
 Quite same as the the HTML <Video />:
 
@@ -71,8 +69,6 @@ import {Video} from 'react-native-media-kit';
   poster={'http://static.yoaicdn.com/shoppc/images/cover_img_e1e9e6b.jpg'}
 />
 ```
-
-
 
 ### API
 
@@ -110,5 +106,6 @@ The API is designed to mimics [html <Video />](https://developer.mozilla.org/en-
 
 
 
-## Attention
+## TODO
 
+* mute feature(Not possilble for MPMoviePlayerController)

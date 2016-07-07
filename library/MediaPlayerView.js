@@ -120,7 +120,7 @@ export default class MediaPlayerView extends React.Component {
           onPlayerBufferOK={this._onPlayerBufferOK.bind(this)}
           onPlayerFinished={this._onPlayerFinished.bind(this)}
           onPlayerBufferChange={(e) => {
-            console.log('onPlayerBufferChange...' + JSON.stringify(e.nativeEvent));
+            //console.log('onPlayerBufferChange...' + JSON.stringify(e.nativeEvent));
           }}
         />
 

@@ -48,11 +48,18 @@
 
 - (void)initPlayerIfNeeded {
   if(!player) {
-    NSLog(@"initPlayerIfNeeded...create new instance");
     player = [AVPlayer playerWithURL:[NSURL URLWithString:self.src]];
     [self setPlayer:player];
     [self addProgressObserver];
     [self addObservers];
+
+    if(player) {
+      if(self.muted) {
+        player.muted = YES;
+      } else {
+        player.muted = NO;
+      }
+    }
   }
 }
 
@@ -74,7 +81,7 @@
 - (void) setSrc: (NSString *)uri {
   NSLog(@"setSrc...src=%@", uri);
   _src = uri;
-  
+
   if(player) {
     [self releasePlayer];
   }
@@ -116,15 +123,14 @@
       [self play];
     } else {
       if ([self.preload isEqualToString:@"none"]) {
-        
+
       } else if ([self.preload isEqualToString:@"metadata"]) {
-        
+
       } else if ([self.preload isEqualToString:@"auto"]) {
         [self initPlayerIfNeeded];
       }
     }
   }
-  
   if(player) {
     if(self.muted) {
       player.muted = YES;
@@ -143,7 +149,7 @@
         [self notifyPlayerProgress];
       }];
     }
-    
+
   }
 }
 
@@ -160,7 +166,6 @@
   if(player && player.currentItem) {
     double currentTime = CMTimeGetSeconds(player.currentTime);
     double totalTime = CMTimeGetSeconds(player.currentItem.duration);
-    NSLog(@"progress...%f, %f", currentTime, totalTime);
     if(isnan(currentTime) || isinf(currentTime)) {
       currentTime = 0;
     }
@@ -216,7 +221,7 @@
                                                name:UIApplicationWillResignActiveNotification object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive:)
                                                name:UIApplicationDidBecomeActiveNotification object:nil];
-  
+
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd:)
                                                name:AVPlayerItemDidPlayToEndTimeNotification object:[player currentItem]];
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemPlaybackStalled:)
@@ -283,14 +288,12 @@
       NSLog(@"status...failed");
     }
   } else if ([keyPath isEqualToString:@"loadedTimeRanges"]) {
-    NSLog(@"loadedTimeRanges...");
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:1];
     for (NSValue *time in player.currentItem.loadedTimeRanges) {
       CMTimeRange range = [time CMTimeRangeValue];
       [array addObject:@{@"start": @(CMTimeGetSeconds(range.start) * 1000), @"duration": @(CMTimeGetSeconds(range.duration) * 1000)}];
     }
     [self notifyPlayerBufferChange:array];
-    
   } else if( [keyPath isEqualToString:@"rate"]) {
     NSLog(@"rate=%f", player.rate);
     if(player.rate == 0) {

@@ -1,4 +1,4 @@
-package com.yoai.reactnative.media.player.trackrenderer;
+package com.greatdroid.reactnative.media.player.trackrenderer;
 
 import android.content.Context;
 import android.media.AudioManager;
@@ -20,7 +20,7 @@ import com.google.android.exoplayer.upstream.DataSource;
 import com.google.android.exoplayer.upstream.DefaultAllocator;
 import com.google.android.exoplayer.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer.upstream.DefaultUriDataSource;
-import com.yoai.reactnative.media.player.TrackRenderersBuilder;
+import com.greatdroid.reactnative.media.player.TrackRenderersBuilder;
 
 public class ExtractorRenderersBuilder implements TrackRenderersBuilder {
 

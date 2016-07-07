@@ -1,4 +1,4 @@
-package com.yoai.reactnative.media.player;
+package com.greatdroid.reactnative.media.player;
 
 import android.content.Context;
 import android.util.Log;

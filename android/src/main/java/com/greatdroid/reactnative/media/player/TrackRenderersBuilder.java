@@ -1,4 +1,4 @@
-package com.yoai.reactnative.media.player;
+package com.greatdroid.reactnative.media.player;
 
 import com.google.android.exoplayer.TrackRenderer;
 

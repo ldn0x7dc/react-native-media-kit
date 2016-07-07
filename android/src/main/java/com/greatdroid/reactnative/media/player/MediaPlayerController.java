@@ -1,4 +1,4 @@
-package com.yoai.reactnative.media.player;
+package com.greatdroid.reactnative.media.player;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
@@ -30,10 +30,10 @@ import com.google.android.exoplayer.text.Cue;
 import com.google.android.exoplayer.text.TextRenderer;
 import com.google.android.exoplayer.upstream.BandwidthMeter;
 import com.google.android.exoplayer.util.Util;
-import com.yoai.reactnative.media.player.trackrenderer.DashRenderersBuilder;
-import com.yoai.reactnative.media.player.trackrenderer.ExtractorRenderersBuilder;
-import com.yoai.reactnative.media.player.trackrenderer.HlsRenderersBuilder;
-import com.yoai.reactnative.media.player.trackrenderer.SmoothStreamingRenderersBuilder;
+import com.greatdroid.reactnative.media.player.trackrenderer.DashRenderersBuilder;
+import com.greatdroid.reactnative.media.player.trackrenderer.ExtractorRenderersBuilder;
+import com.greatdroid.reactnative.media.player.trackrenderer.HlsRenderersBuilder;
+import com.greatdroid.reactnative.media.player.trackrenderer.SmoothStreamingRenderersBuilder;
 
 import java.util.LinkedList;
 import java.util.List;

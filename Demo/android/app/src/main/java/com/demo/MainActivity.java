@@ -3,7 +3,7 @@ package com.demo;
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
-import com.yoai.reactnative.media.MediaKitPackage;
+import com.greatdroid.reactnative.media.MediaKitPackage;
 
 import java.util.Arrays;
 import java.util.List;

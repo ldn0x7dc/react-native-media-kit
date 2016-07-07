@@ -66,6 +66,7 @@ import {Video} from 'react-native-media-kit';
   preload={'none'}
   loop={false}
   controls={true}
+  muted={false}
   poster={'http://static.yoaicdn.com/shoppc/images/cover_img_e1e9e6b.jpg'}
 />
 ```
@@ -83,7 +84,8 @@ The API is designed to mimics [html <Video />](https://developer.mozilla.org/en-
 | **preload**  | A String attribute: can be 'none', 'metadata'(iOS only), 'auto' | OK   | OK      |
 | **loop**     | A Boolean attribute; if specified, we will, upon reaching the end of the video, automatically seek back to the start. | OK   | OK      |
 | **controls** | A Boolean attribute; if specifid, will offer controls to allow the user to control video playback, including seeking, and pause/resume playback. | OK   | OK      |
-| poster       | A URL indicating a poster frame to show until the user plays. | OK   | OK      |
+| **poster**   | A URL indicating a poster frame to show until the user plays. | OK   | OK      |
+| **muted**    | A Boolean attribute. If set, the audio will be silenced. Its default value is false. | OK   | OK      |
 
 ##### Callbacks
 
@@ -107,6 +109,3 @@ The API is designed to mimics [html <Video />](https://developer.mozilla.org/en-
 
 
 ## TODO
-
-* switch to AVPlayer (since MPMoviePlayerController is deprecated on iOS 9)
-* mute feature (Not possilble for MPMoviePlayerController)

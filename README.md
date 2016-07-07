@@ -1,6 +1,6 @@
 # react-native-media-kit
 
-Video and Audio component for react-native apps, supporting both iOS and Android. 
+Video and Audio components for react-native apps, supporting both iOS and Android. A unified and elegant player controller is provided by default.
 
 Runs on react-native 0.28+. Supported media types:
 

@@ -73,39 +73,41 @@ import {Video} from 'react-native-media-kit';
 
 ### API
 
-The API is designed to mimics [html <Video />](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video).  For now, the Video and Audio component are identical.
+The API is designed to mimics html [`<video />`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video).  
+
+For now, the Video and Audio component are identical.
 
 ##### Properties
 
-| key          | value                                    | iOS  | Android |
-| ------------ | ---------------------------------------- | ---- | ------- |
-| **src**      | The URL of the video                     | OK   | OK      |
-| **autoplay** | A Boolean attribute; if specified, the video automatically begins to play back as soon as it's ready | OK   | OK      |
-| **preload**  | A String attribute: can be 'none', 'metadata'(iOS only), 'auto' | OK   | OK      |
-| **loop**     | A Boolean attribute; if specified, we will, upon reaching the end of the video, automatically seek back to the start. | OK   | OK      |
-| **controls** | A Boolean attribute; if specifid, will offer controls to allow the user to control video playback, including seeking, and pause/resume playback. | OK   | OK      |
-| **poster**   | A URL indicating a poster frame to show until the user plays. | OK   | OK      |
-| **muted**    | A Boolean attribute. If set, the audio will be silenced. Its default value is false. | OK   | OK      |
+| key                  | value                                    | iOS  | Android |
+| -------------------- | ---------------------------------------- | ---- | ------- |
+| src                  | the URL of the video                     | OK   | OK      |
+| autoplay             | true to automatically begins to play. Default is false. | OK   | OK      |
+| preload              | can be 'none', 'auto'. Default is 'none'. | OK   | OK      |
+| loop                 | true to automatically seek back to the start upon reaching the end of the video. Default is 'false'. | OK   | OK      |
+| controls             | true to show controls to allow user to control video playback, including seeking, and pause/resume playback. Default is true. | OK   | OK      |
+| poster               | an image URL indicating a poster frame to show until the user plays. | OK   | OK      |
+| muted                | true to silence the audio. Default is false. | OK   | OK      |
+| onPlayerPaused       |                                          | OK   | OK      |
+| onPlayerPlaying      |                                          | OK   | OK      |
+| onPlayerFinished     |                                          | OK   | OK      |
+| onPlayerBuffering    |                                          | OK   | OK      |
+| onPlayerBufferOK     |                                          | OK   | OK      |
+| onPlayerProgress     |                                          | OK   | OK      |
+| onPlayerBufferChange | Working on it to support Android         | OK   | N.A     |
 
-##### Callbacks
-
-| key                   |                  | iOS  | Android |
-| --------------------- | :--------------: | ---- | ------- |
-| **onPlayerPaused**    | As the name says | OK   | OK      |
-| **onPlayerPlaying**   |                  | OK   | OK      |
-| **onPlayerFinished**  |                  | OK   | OK      |
-| **onPlayerBuffering** |                  | OK   | OK      |
-| **onPlayerBufferOK**  |                  | OK   | OK      |
-| **onPlayerProgress**  |                  | OK   | OK      |
+You can use the onPlayerXXX callbacks  to implement  your custom controls.
 
 ##### Methods
 
-- pause
-- play
-- stop
-- seekTo
+- ***pause***
+- ***play***
+- ***stop***
+- ***seekTo***
 
 
 
 
 ## TODO
+
+* toggle between normal size and fullscreen

@@ -31,11 +31,21 @@ export default class App extends Component {
         <Video
           style={{width: this.state.width, height: this.state.height, marginTop: 50, backgroundColor: 'black'}}
           autoplay={false}
-          preload='auto'
+          preload='none'
+          loop={true}
+          controls={this.state.controls}
+          muted={true}
+          src={'http://192.168.100.18:3000/videos/SNH48%20-%20%E6%A2%A6%E6%83%B3%E5%B2%9B%20(Dream%20Land)%20MV.mp4'}
+        />
+
+        <Video
+          style={{width: this.state.width, height: this.state.height, marginTop: 50, backgroundColor: 'black'}}
+          autoplay={true}
+          preload='none'
           loop={true}
           controls={this.state.controls}
           muted={this.state.muted}
-          src={'http://192.168.100.18:3000/videos/SNH48%20-%20%E6%A2%A6%E6%83%B3%E5%B2%9B%20(Dream%20Land)%20MV.mp4'}
+          src={'http://192.168.100.18:3000/videos/[Music%20Core%20K-pop%20Vertical%20fancam]%20SISTAR%20soyu%20I%20Like%20That.mp4'}
         />
 
         <View

@@ -32,6 +32,7 @@ public class ReactMediaPlayerView extends FrameLayout implements LifecycleEventL
   private String uri;
   private boolean loop;
   private boolean autoplay;
+  private boolean muted;
   private String preload;
 
   private boolean playWhenReadySnapshot;
@@ -48,7 +49,6 @@ public class ReactMediaPlayerView extends FrameLayout implements LifecycleEventL
 
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-      Log.d(TAG, "onPlayerStateChanged..." + uri);
       Log.d(TAG, "onPlayerStateChanged...playWhenReady=" + playWhenReady + ", state=" + descPlaybackState(playbackState));
       if (mediaPlayerListener != null) {
         switch (playbackState) {
@@ -96,7 +96,6 @@ public class ReactMediaPlayerView extends FrameLayout implements LifecycleEventL
 
       @Override
       public void onOwnershipChanged(MediaPlayerControllerOwner owner, MediaPlayerController controller) {
-        Log.d(TAG, "onOwnershipChanged..." + uri);
         if (owner == mediaPlayerControllerOwner) {
           Log.d(TAG, "onOwnershipChanged...add view");
           controller.addEventListener(l);
@@ -150,34 +149,41 @@ public class ReactMediaPlayerView extends FrameLayout implements LifecycleEventL
 
   public void setUri(String uri) {
     this.uri = uri;
+    updateProps(mediaPlayerController);
   }
 
   public void setLoop(boolean loop) {
     this.loop = loop;
+    updateProps(mediaPlayerController);
   }
 
   public void setPreload(String preload) {
     this.preload = preload;
+    updateProps(mediaPlayerController);
   }
 
   public void setAutoplay(boolean autoplay) {
     this.autoplay = autoplay;
+    updateProps(mediaPlayerController);
+  }
+
+  public void setMuted(boolean muted) {
+    this.muted = muted;
+    updateProps(mediaPlayerController);
   }
 
   private void updateProps(MediaPlayerController playerController) {
     if (playerController != null) {
-      playerController.setLoop(loop);
       playerController.setContentUri(uri);
-
       if (autoplay) {
-        playerController.setPlayWhenReady(true);
-        playerController.prepareToPlay();
+        playerController.play();
       } else {
-        playerController.setPlayWhenReady(false);
         if (preload != null && preload.equals("auto")) {
           playerController.prepareToPlay();
         }
       }
+      playerController.setLoop(loop);
+      playerController.setMuted(muted);
     }
   }
 
@@ -189,7 +195,9 @@ public class ReactMediaPlayerView extends FrameLayout implements LifecycleEventL
       ((ReactContext) getContext()).addLifecycleEventListener(this);
     }
 
-    mediaPlayerControllerOwner.requestOwnership(getContext());
+    if(autoplay || "auto".equals(preload)) {
+      mediaPlayerControllerOwner.requestOwnership(getContext());
+    }
   }
 
   @Override

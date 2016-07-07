@@ -53,6 +53,7 @@ public class MediaPlayerController {
 
   private TrackRenderersBuilder trackRenderersBuilder;
   private TrackRenderer videoTrackRenderer;
+  private TrackRenderer audioTrackRenderer;
 
   private final AspectRatioFrameLayout aspectRatioFrameLayout;
   private TextureView textureView;
@@ -60,12 +61,14 @@ public class MediaPlayerController {
 
   private boolean ended = false;
   private boolean loop = false;
+  private boolean muted = false;
+
 
   public MediaPlayerController(Context context) {
     this.context = context;
     this.exoPlayer = ExoPlayer.Factory.newInstance(TrackRenderersBuilder.TRACK_RENDER_COUNT, 1000, 1000);
     this.exoPlayer.addListener(internalEventListener);
-    this.exoPlayer.setPlayWhenReady(true);
+    this.exoPlayer.setPlayWhenReady(false);
     this.mainHandler = new Handler(Looper.getMainLooper());
 
 
@@ -108,9 +111,19 @@ public class MediaPlayerController {
     resetPlayerForReuse();
   }
 
+  public void setMuted(boolean muted) {
+    this.muted = muted;
+    if(audioTrackRenderer != null) {
+      if(muted) {
+        exoPlayer.sendMessage(audioTrackRenderer, MediaCodecAudioTrackRenderer.MSG_SET_VOLUME, 0f);
+      } else {
+        exoPlayer.sendMessage(audioTrackRenderer, MediaCodecAudioTrackRenderer.MSG_SET_VOLUME, 1f);
+      }
+    }
+  }
+
   public void prepareToPlay() {
-    Log.d(TAG, "prepareToPlay...src=" + uri);
-    if(this.uri != null) {
+    if(trackRenderersBuilder == null && this.uri != null) {
       renderTracks(this.uri);
     }
   }
@@ -137,11 +150,15 @@ public class MediaPlayerController {
           }
         }
         videoTrackRenderer = trackRenderers[TrackRenderersBuilder.TRACK_VIDEO_INDEX];
-
+        audioTrackRenderer = trackRenderers[TrackRenderersBuilder.TRACK_AUDIO_INDEX];
         exoPlayer.prepare(trackRenderers);
 
         if (surfaceTexture != null) {
           setSurface(new Surface(surfaceTexture));
+        }
+
+        if (muted) {
+          setMuted(true);
         }
       }
 

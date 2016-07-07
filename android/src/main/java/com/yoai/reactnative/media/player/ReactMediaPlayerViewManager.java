@@ -70,6 +70,13 @@ public class ReactMediaPlayerViewManager extends SimpleViewManager<ReactMediaPla
     view.setLoop(loop);
   }
 
+  @ReactProp(name = "muted", defaultBoolean = false)
+  public void setMuted(ReactMediaPlayerView view, boolean muted) {
+    Log.d(TAG, "setMuted...muted=" + muted);
+    view.setMuted(muted);
+
+  }
+
   ////////////////////////////////
 
   @Override

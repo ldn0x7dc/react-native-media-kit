@@ -14,6 +14,7 @@
   BOOL shouldResumePlay;
   BOOL shouldContinuePlayWhenForeground;
   BOOL firstLayout;
+  BOOL firstReady;
 }
 
 + (Class)layerClass {
@@ -69,6 +70,7 @@
     [self removeProgressObserver];
     [self removeObservers];
     player = nil;
+    firstReady = false;
   }
 }
 
@@ -109,11 +111,12 @@
 - (void) layoutSubviews {
   NSLog(@"layoutSubviews...");
   [super layoutSubviews];
+  firstLayout = true;
   [self updateProps];
 }
 
 - (void) updateProps {
-  if(!self.src) {
+  if(!self.src || !firstLayout) {
     return;
   }
 
@@ -232,6 +235,7 @@
       [player.currentItem addObserver:self forKeyPath:@"status" options:0 context:nil];
       [player.currentItem addObserver:self forKeyPath:@"loadedTimeRanges" options:0 context:nil];
       [player.currentItem addObserver:self forKeyPath:@"playbackBufferFull" options:0 context:nil];
+      [player.currentItem addObserver:self forKeyPath:@"playbackBufferEmpty" options:0 context:nil];
     }
   }
 }
@@ -244,6 +248,7 @@
       [player.currentItem removeObserver:self forKeyPath:@"status"];
       [player.currentItem removeObserver:self forKeyPath:@"loadedTimeRanges"];
       [player.currentItem removeObserver:self forKeyPath:@"playbackBufferFull"];
+      [player.currentItem removeObserver:self forKeyPath:@"playbackBufferEmpty"];
     }
   }
 }
@@ -274,6 +279,7 @@
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
+  NSLog(keyPath);
   if(!player) {
     return;
   }
@@ -281,7 +287,12 @@
     AVPlayerItem *playerItem = (AVPlayerItem *)object;
     if(playerItem.status == AVPlayerItemStatusReadyToPlay) {
       NSLog(@"status...ready to play");
+      firstReady = true;
       [self notifyPlayerProgress];
+      [self notifyPlayerBufferOK];
+      if(player.rate != 0) {
+        [self notifyPlayerPlaying];
+      }
     } else if(playerItem.status == AVPlayerItemStatusUnknown) {
       NSLog(@"status...unknown");
     } else if(playerItem.status == AVPlayerItemStatusFailed) {
@@ -299,7 +310,11 @@
     if(player.rate == 0) {
       [self notifyPlayerPaused];
     } else {
-      [self notifyPlayerPlaying];
+      if (firstReady) {
+        [self notifyPlayerPlaying];
+      } else {
+        [self notifyPlayerBuffering];
+      }
     }
   } else if([keyPath isEqualToString:@"playbackBufferFull"]) {
     [self notifyPlayerBufferOK];

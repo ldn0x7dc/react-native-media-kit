@@ -91,7 +91,7 @@ The API is designed to mimics [html <Video />](https://developer.mozilla.org/en-
 
 | key                   |                  | iOS  | Android |
 | --------------------- | :--------------: | ---- | ------- |
-| **onPlayerPaused**    | As the same says | OK   | OK      |
+| **onPlayerPaused**    | As the name says | OK   | OK      |
 | **onPlayerPlaying**   |                  | OK   | OK      |
 | **onPlayerFinished**  |                  | OK   | OK      |
 | **onPlayerBuffering** |                  | OK   | OK      |

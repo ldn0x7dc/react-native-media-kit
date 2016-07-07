@@ -140,27 +140,3 @@ export default class Controls extends React.Component {
     );
   }
 }
-
-//class ActivityIndicator extends React.Component {
-//  render() {
-//    if (Platform.OS === 'android') {
-//      if (this.props.animating) {
-//        return (
-//          <ProgressBarAndroid
-//            styleAttr={'Large'}
-//            indeterminate={true}/>
-//        );
-//      }
-//    } else if (Platform.OS === 'ios') {
-//      if (this.props.animating) {
-//        return (
-//          <ActivityIndicatorIOS
-//            size={'large'}
-//            animating={true}
-//          />
-//        );
-//      }
-//    }
-//    return null;
-//  }
-//}

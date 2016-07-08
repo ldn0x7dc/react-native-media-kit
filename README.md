@@ -111,3 +111,4 @@ You can use the onPlayerXXX callbacks  to implement  your custom controls.
 ## TODO
 
 * toggle between normal size and fullscreen
+* not display progress bar when duration is indetermined

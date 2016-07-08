@@ -279,7 +279,6 @@
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
-  NSLog(keyPath);
   if(!player) {
     return;
   }

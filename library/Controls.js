@@ -12,8 +12,10 @@ import ReactNative, {
   Image,
   Platform,
   ActivityIndicator,
-  Slider
+  //Slider
 } from 'react-native';
+
+import Slider from '@ldn0x7dc/react-native-slider';
 
 /**
  * format as --:-- or --:--:--
@@ -33,6 +35,16 @@ function formatProgress(timeSec, containHours) {
   let minutes = Math.floor(timeSec / 60.0 % 60.0).toFixed(0);
   let seconds = Math.floor(timeSec % 60.0).toFixed(0);
 
+  if(hours < 0) {
+    hours = 0;
+  }
+  if (minutes < 0) {
+    minutes = 0;
+  }
+  if(seconds < 0) {
+    seconds = 0;
+  }
+
   hours = zeroPad(hours);
   minutes = zeroPad(minutes);
   seconds = zeroPad(seconds);
@@ -42,8 +54,6 @@ function formatProgress(timeSec, containHours) {
   }
   return minutes + ':' + seconds;
 }
-
-const SLIDER_REF = 'sliderRef';
 
 export default class Controls extends React.Component {
 
@@ -106,11 +116,10 @@ export default class Controls extends React.Component {
           </Text>
 
           <Slider
-            ref={SLIDER_REF}
-            maximumTrackTintColor={'#a1a1a1'}
-            minimumTrackTintColor={'white'}
-            style={{flex: 1, marginHorizontal: 5}}
+            style={{flex: 1, marginHorizontal: 5, height: 40}}
+            trackContainerStyle={{height: 2, backgroundColor: 'gray'}}
             thumbImage={require('./img/media-player-thumb.png')}
+            thumbStyle={{width: 10, height: 10}}
 
             onSlidingComplete={(value) => {
               this.setState({
@@ -127,7 +136,8 @@ export default class Controls extends React.Component {
             }}
             maximumValue={this.props.total}
             minimumValue={0}
-            value={this.state.sliding? 0 : this.state.current}
+            value={this.state.current}
+            disabled={this.props.total > 0}
           />
 
           <Text

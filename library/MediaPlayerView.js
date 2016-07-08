@@ -100,6 +100,7 @@ export default class MediaPlayerView extends React.Component {
               this.play();
             }
           }}
+          bufferRanges={this.state.bufferRanges}
         />
       );
     }
@@ -119,9 +120,7 @@ export default class MediaPlayerView extends React.Component {
           onPlayerBuffering={this._onPlayerBuffering.bind(this)}
           onPlayerBufferOK={this._onPlayerBufferOK.bind(this)}
           onPlayerFinished={this._onPlayerFinished.bind(this)}
-          onPlayerBufferChange={(e) => {
-            //console.log('onPlayerBufferChange...' + JSON.stringify(e.nativeEvent));
-          }}
+          onPlayerBufferChange={this._onPlayerBufferChange.bind(this)}
         />
 
         {posterView}
@@ -182,6 +181,16 @@ export default class MediaPlayerView extends React.Component {
     if (this.props.controls) {
       this.setState({
         buffering: true
+      });
+    }
+  }
+
+  _onPlayerBufferChange(e) {
+    this.props.onPlayerBuffering && this.props.onPlayerBuffering(e);
+
+    if (this.props.controls) {
+      this.setState({
+        bufferRanges: e.nativeEvent.ranges
       });
     }
   }

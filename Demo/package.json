@@ -8,6 +8,6 @@
   "dependencies": {
     "react": "^15.1.0",
     "react-native": "^0.28.0",
-    "react-native-media-kit": "0.0.x"
+    "react-native-media-kit": "0.0.12"
   }
 }

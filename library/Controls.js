@@ -12,7 +12,6 @@ import ReactNative, {
   Image,
   Platform,
   ActivityIndicator,
-  //Slider
 } from 'react-native';
 
 import Slider from '@ldn0x7dc/react-native-slider';
@@ -83,9 +82,9 @@ export default class Controls extends React.Component {
   }
 
   render() {
-    let containHours = this.props.total >= 60 * 60 * 1000;
-    let currentFormated = formatProgress(this.state.current / 1000, containHours);
-    let totalFormated = formatProgress(this.props.total / 1000, containHours);
+    const containHours = this.props.total >= 60 * 60 * 1000;
+    const currentFormated = formatProgress(this.state.current / 1000, containHours);
+    const totalFormated = formatProgress(this.props.total / 1000, containHours);
 
     let bufferIndicator;
     if(this.props.buffering) {
@@ -95,6 +94,27 @@ export default class Controls extends React.Component {
           size={'large'}/>
       );
     }
+
+    let tracks = [];
+    if(this.props.bufferRanges) {
+      tracks = this.props.bufferRanges.map((range) => {
+        let startValue = range.start;
+        let endValue = startValue + range.duration;
+        return {
+          key: 'bufferTrack:' + startValue + '-' + endValue,
+          startValue, endValue,
+          style: {backgroundColor: '#eeeeee66'}
+        }
+      });
+    }
+    tracks.push(
+      {
+        key: 'thumbTrack',
+        style: {backgroundColor: 'white'}
+      }
+    );
+
+
     return (
       <View
         style={{position: 'absolute', left: 0, top: 0, right: 0, bottom: 0, flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
@@ -138,6 +158,7 @@ export default class Controls extends React.Component {
             minimumValue={0}
             value={this.state.current}
             disabled={this.props.total > 0}
+            tracks={tracks}
           />
 
           <Text

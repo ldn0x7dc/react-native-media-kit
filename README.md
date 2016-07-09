@@ -2,11 +2,11 @@
 
 Video(and audio) component for react-native apps, supporting both iOS and Android, with API similar to HTML video.
 
-A default elegant and unified(both on iOS and android) set of controls is provided to play/pause, seek and to display current playback and buffer progress.
+A default set of controls is provided to play/pause, seek and to display current playback and buffer progress.
 
 Runs on react-native 0.28+. Supported media types:
 
-* iOS: Should be same as those supported by [MPMoviePlayerController](https://developer.apple.com/library/ios/documentation/MediaPlayer/Reference/MPMoviePlayerController_Class/)
+* iOS: Should be same as those supported by [AVPlayer](https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVPlayer_Class/)
 
 
 * Android: Shold be same as those supported by [ExoPlayer](https://github.com/google/ExoPlayer)
@@ -75,9 +75,7 @@ import {Video} from 'react-native-media-kit';
 
 ### API
 
-The API is designed to mimics html [`<video />`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video).  
-
-For now, the Video and Audio component are identical.
+The API is designed to mimics html [`<video />`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video).  For now, the Video and Audio component are identical.
 
 ##### Properties
 
@@ -113,4 +111,3 @@ You can use the onPlayerXXX callbacks  to implement  your custom controls.
 ## TODO
 
 * toggle between normal size and fullscreen
-* not display progress bar when duration is indetermined

@@ -42,7 +42,7 @@ dependencies {
 **MainActivity.java**
 
 ```
-import com.yoai.reactnative.media.MediaKitPackage;
+import com.greatdroid.reactnative.media.MediaKitPackage;
 ...
 protected List<ReactPackage> getPackages() {
     return Arrays.<ReactPackage>asList(

@@ -37,7 +37,7 @@ export default class MediaPlayerView extends React.Component {
   static propTypes = {
     ...RCTMediaPlayerView.propTypes,
     controls: PropTypes.bool,
-    poster: PropTypes.string
+    poster: PropTypes.any
   }
 
   static defaultProps = {
@@ -70,6 +70,10 @@ export default class MediaPlayerView extends React.Component {
   render() {
     let posterView;
     if(this.props.poster && this.state.width && this.state.height && this.state.showPoster) {
+      let posterSource = this.props.poster;
+      if (typeof(posterSource) === 'string') {
+        posterSource = {uri: posterSource};
+       }
       posterView = (
         <Image
           style={{
@@ -80,7 +84,7 @@ export default class MediaPlayerView extends React.Component {
           height: this.state.height,
           resizeMode: 'contain'
           }}
-          source={{uri: this.props.poster}}/>
+          source={posterSource}/>
       );
     }
 

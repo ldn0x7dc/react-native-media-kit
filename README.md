@@ -99,7 +99,7 @@ The API is designed to mimics html [`<video />`](https://developer.mozilla.org/e
 | onPlayerBuffering    |                                          | OK   | OK      |
 | onPlayerBufferOK     |                                          | OK   | OK      |
 | onPlayerProgress     |                                          | OK   | OK      |
-| onPlayerBufferChange | Working on it to support Android         | OK   | OK      |
+| onPlayerBufferChange |                                          | OK   | OK      |
 
 - ***pause***
 - ***play***

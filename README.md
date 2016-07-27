@@ -108,3 +108,9 @@ The API is designed to mimics html [`<video />`](https://developer.mozilla.org/e
 
 
 For details about the usage of above APIs, check `library/MediaPlayerView.js`.
+
+
+
+## TODO
+
+* background play

@@ -239,8 +239,9 @@ public class ReactMediaPlayerView extends FrameLayout implements LifecycleEventL
     if (mediaPlayerController != null) {
       long current = mediaPlayerController.getCurrentPosition();
       long total = mediaPlayerController.getDuration();
+      long buffered = mediaPlayerController.getBufferedPosition();
       if (mediaPlayerListener != null) {
-        mediaPlayerListener.onPlayerProgress(current, total);
+        mediaPlayerListener.onPlayerProgress(current, total, buffered);
       }
     }
   }
@@ -273,7 +274,7 @@ public class ReactMediaPlayerView extends FrameLayout implements LifecycleEventL
 
     void onPlayerBufferReady();
 
-    void onPlayerProgress(long current, long total);
+    void onPlayerProgress(long current, long total, long buffered);
   }
 
   public void setMediaPlayerListener(MediaPlayerListener listener) {

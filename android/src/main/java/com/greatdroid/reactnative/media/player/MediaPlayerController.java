@@ -236,6 +236,10 @@ public class MediaPlayerController {
     return exoPlayer.getDuration();
   }
 
+  public long getBufferedPosition() {
+    return exoPlayer.getBufferedPosition();
+  }
+
   public void release() {
     if (trackRenderersBuilder != null) {
       trackRenderersBuilder.cancel();
@@ -305,7 +309,7 @@ public class MediaPlayerController {
 
     @Override
     public void onDroppedFrames(int count, long elapsed) {
-
+      Log.d(TAG, "onDroppedFrames...count=" + count + ", elapsed=" + elapsed);
     }
 
     @Override

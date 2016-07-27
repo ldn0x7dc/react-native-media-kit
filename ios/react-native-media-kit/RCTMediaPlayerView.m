@@ -49,7 +49,17 @@
 
 - (void)initPlayerIfNeeded {
   if(!player) {
-    player = [AVPlayer playerWithURL:[NSURL URLWithString:self.src]];
+    NSURL *url;
+    NSString *resourcePrefix = @"resource:";
+    if ([self.src hasPrefix:resourcePrefix]) {
+      NSString *resource = [self.src substringFromIndex:[resourcePrefix length]];
+      NSBundle *mainBundle = [NSBundle mainBundle];
+      NSString *file = [mainBundle pathForResource:resource ofType:nil];
+      url = [NSURL fileURLWithPath:file];
+    } else {
+      url = [NSURL URLWithString:self.src];
+    }
+    player = [AVPlayer playerWithURL:url];
     [self setPlayer:player];
     [self addProgressObserver];
     [self addObservers];

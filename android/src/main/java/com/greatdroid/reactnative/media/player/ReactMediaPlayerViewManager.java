@@ -51,6 +51,10 @@ public class ReactMediaPlayerViewManager extends SimpleViewManager<ReactMediaPla
   @ReactProp(name = "src")
   public void setSrc(ReactMediaPlayerView view, @Nullable String uri) {
     Log.d(TAG, "setSrc...src=" + uri);
+    String resourcePrefix = "resource:";
+    if (uri.startsWith(resourcePrefix)) {
+        uri = "asset:///" + uri.substring(resourcePrefix.length());
+    }
     view.setUri(uri);
   }
 

@@ -1,5 +1,6 @@
 rootProject.name = 'Demo'
 
 include ':app'
+
 include ':react-native-media-kit'
 project(':react-native-media-kit').projectDir = new File('../node_modules/react-native-media-kit/android')

@@ -265,13 +265,13 @@
 }
 
 - (void)playerItemDidReachEnd:(NSNotification *)notification {
+  [self notifyPlayerFinished];
   if(player) {
     [player seekToTime:kCMTimeZero];
     if (self.loop) {
       [self play];
     }
   }
-  [self notifyPlayerFinished];
 }
 
 - (void)playerItemPlaybackStalled:(NSNotification *)notification {
@@ -279,6 +279,7 @@
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
+  NSLog(keyPath);
   if(!player) {
     return;
   }

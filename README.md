@@ -4,7 +4,9 @@ Video(and audio) component for react-native apps, supporting both iOS and Androi
 
 A default set of controls is provided to play/pause, seek and to display current playback and buffer progress.
 
-Runs on react-native 0.28+. Supported media types:
+Runs on react-native 0.28+ (The limit exists due to [ActivityIndicator](https://facebook.github.io/react-native/docs/activityindicator.html) comes after 0.28).
+
+Supported media types:
 
 * iOS: Should be same as those supported by [AVPlayer](https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVPlayer_Class/)
 
@@ -39,7 +41,7 @@ dependencies {
 }
 ```
 
-**MainActivity.java**
+**MainActivity.java (or MainApplication on rn 0.29+)**
 
 ```
 import com.greatdroid.reactnative.media.MediaKitPackage;
@@ -56,26 +58,29 @@ protected List<ReactPackage> getPackages() {
 
 ## Documentation
 
-Quite same as the the HTML <Video />:
-
 ```
 import {Video} from 'react-native-media-kit';
 ...
-<Video
-  style={{width: width, height: width / (16/9)}}
-  src={'http://v.yoai.com/femme_tampon_tutorial.mp4'}
-  autoplay={false}
-  preload={'none'}
-  loop={false}
-  controls={true}
-  muted={false}
-  poster={'http://static.yoaicdn.com/shoppc/images/cover_img_e1e9e6b.jpg'}
-/>
+render() {
+  return (
+  	<Video
+      style={{width: width, height: width / (16/9)}}
+      src={'http://v.yoai.com/femme_tampon_tutorial.mp4'}
+      autoplay={false}
+      preload={'none'}
+      loop={false}
+      controls={true}
+      muted={false}
+      poster={'http://static.yoaicdn.com/shoppc/images/cover_img_e1e9e6b.jpg'}
+    />
+  );
+}
+
 ```
 
 ### API
 
-The API is designed to mimics html [`<video />`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video).  For now, the Video and Audio component are identical.
+The API is designed to mimics html [`<video />`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video). (*For now, the Video and Audio component are identical*)
 
 ##### Properties
 
@@ -94,11 +99,7 @@ The API is designed to mimics html [`<video />`](https://developer.mozilla.org/e
 | onPlayerBuffering    |                                          | OK   | OK      |
 | onPlayerBufferOK     |                                          | OK   | OK      |
 | onPlayerProgress     |                                          | OK   | OK      |
-| onPlayerBufferChange | Working on it to support Android         | OK   | N.A     |
-
-You can use the onPlayerXXX callbacks  to implement  your custom controls.
-
-##### Methods
+| onPlayerBufferChange | Working on it to support Android         | OK   | OK      |
 
 - ***pause***
 - ***play***
@@ -106,8 +107,4 @@ You can use the onPlayerXXX callbacks  to implement  your custom controls.
 - ***seekTo***
 
 
-
-
-## TODO
-
-* toggle between normal size and fullscreen
+For details about the usage of above APIs, check `library/MediaPlayerView.js`.

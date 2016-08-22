@@ -157,7 +157,7 @@ export default class Controls extends React.Component {
             maximumValue={this.props.total}
             minimumValue={0}
             value={this.state.current}
-            disabled={this.props.total > 0}
+            disabled={this.props.total <= 0}
             tracks={tracks}
           />
 

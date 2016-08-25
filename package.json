@@ -10,7 +10,7 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ldn0x7dc/react-native-media-kit.git"
+    "url": "git+https://github.com/azendoo/react-native-media-kit.git"
   },
   "keywords": [
     "video",
@@ -19,9 +19,9 @@
     "react-native"
   ],
   "bugs": {
-    "url": "https://github.com/ldn0x7dc/react-native-media-kit/issues"
+    "url": "https://github.com/azendoo/react-native-media-kit/issues"
   },
-  "homepage": "https://github.com/ldn0x7dc/react-native-media-kit#readme",
+  "homepage": "https://github.com/azendoo/react-native-media-kit#readme",
   "dependencies": {
     "@ldn0x7dc/react-native-slider": "0.0.3"
   }

@@ -17,6 +17,8 @@ Supported media types:
 
 ## Install
 
+On this fork, Demo will work properly but you have to install the latest version of react-native-orientation on your own repository or in this one (will be updated later).
+
 `npm install --save react-native-media-kit@latest `
 
 #### iOS
@@ -100,6 +102,8 @@ The API is designed to mimics html [`<video />`](https://developer.mozilla.org/e
 | onPlayerBufferOK     |                                          | OK   | OK      |
 | onPlayerProgress     |                                          | OK   | OK      |
 | onPlayerBufferChange |                                          | OK   | OK      |
+| onFullscreen | not well implemented (a next update) | OK | OK |
+| title | not yet implement | KO | KO |
 
 - ***pause***
 - ***play***

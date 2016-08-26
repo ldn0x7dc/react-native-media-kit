@@ -1,14 +1,26 @@
-import React, {PropTypes} from 'react';
+// @flow
+import React, {
+  Component,
+  PropTypes
+} from 'react';
 
 import ReactNative, {
   StyleSheet,
   View,
   NativeModules,
   requireNativeComponent,
-  Image
+  TouchableWithoutFeedback,
+  TouchableOpacity,
+  Image,
+  BackAndroid,
+  ActivityIndicator
 } from 'react-native';
 
+import Orientation from 'react-native-orientation';
 import Controls from './Controls';
+import reactMixin from 'react-mixin';
+import TimerMixin from 'react-timer-mixin';
+
 
 const UIManager = NativeModules.UIManager;
 const RCT_MEDIA_PLAYER_VIEW_REF = "RCTMediaPlayerView";
@@ -32,63 +44,72 @@ const RCTMediaPlayerView = requireNativeComponent('RCTMediaPlayerView', {
   }
 });
 
-export default class MediaPlayerView extends React.Component {
+class MediaPlayerView extends Component {
 
   static propTypes = {
     ...RCTMediaPlayerView.propTypes,
     controls: PropTypes.bool,
-    poster: PropTypes.string
-  }
+    poster: PropTypes.string,
+    title: PropTypes.string,
+    onFullscreen: PropTypes.func,
+  };
 
   static defaultProps = {
     autoplay: false,
-    controls: true,
+    controls: true, // if controls, title will appear too
+    title: null,
     preload: 'none',
     loop: false,
-  }
+  };
 
-  constructor(props) {
+  constructor(props: propTypes) {
     super(props);
     this.state = {
       buffering: false,
       playing: false,
       current: 0,
       total: 0,
-
+      controlsWillUnmount: false,
       width: 0,
       height: 0,
-      showPoster: true
-
+      showPoster: true,
+      controls: props.controls,
+      fullscreen: false,
     };
+    if (props.poster && this.state.showPoster) {
+      this.state = {...this.state, controls: false};
+    }
+    this.onFullscreen = this.onFullscreen.bind(this);
   }
 
   componentWillUnmount() {
-    console.log('componentWillUnmount...');
     this.stop();
   }
 
   render() {
+    /*
+     * Poster (Image when mediaPlayer is not started)
+     */
     let posterView;
     if(this.props.poster && this.state.width && this.state.height && this.state.showPoster) {
       posterView = (
-        <Image
-          style={{
-          position: 'absolute',
-          left: 0, right: 0, top: 0, bottom: 0,
-          backgroundColor: 'transparent',
-          width: this.state.width,
-          height: this.state.height,
-          resizeMode: 'contain'
-          }}
-          source={{uri: this.props.poster}}/>
+        <TouchableOpacity
+          onPress={this.onPosterPress.bind(this)}
+          style={[styles.posterTouch, { width: this.state.width, height: this.state.height }]}>
+          <Image
+            style={styles.posterImg}
+            source={{uri: this.props.poster}}/>
+          </TouchableOpacity>
       );
     }
 
+    /*
+     * Controls (=> play/pause button, slider, expand/collapse button)
+     */
     let controlsView;
-    if (this.props.controls) {
+    if (this.state.controls) {
       controlsView = (
         <Controls
-          buffering={this.state.buffering}
           playing={this.state.playing}
           current={this.state.current}
           total={this.state.total}
@@ -101,32 +122,64 @@ export default class MediaPlayerView extends React.Component {
             }
           }}
           bufferRanges={this.state.bufferRanges}
+          onFullscreen={this.onFullscreen}
+          fullscreen={this.state.fullscreen}
+          willUnmount={this.state.controlsWillUnmount}
         />
       );
     }
 
+    /*
+     * Spinning overlay
+     */
+    let bufferIndicator;
+    if (this.state.buffering) {
+      bufferIndicator = (
+        <ActivityIndicator
+          color={'#f2f2f2'}
+          size={'large'}
+          style={styles.positionAbsolute}/>
+      );
+    }
+
     return (
-      <View
-        style={this.props.style}
-        onLayout={this._onLayout.bind(this)}>
-
-        <RCTMediaPlayerView
-          {...this.props}
-          style={{flex: 1, alignSelf: 'stretch'}}
-          ref={RCT_MEDIA_PLAYER_VIEW_REF}
-          onPlayerPlaying={this._onPlayerPlaying.bind(this)}
-          onPlayerProgress={this._onPlayerProgress.bind(this)}
-          onPlayerPaused={this._onPlayerPaused.bind(this)}
-          onPlayerBuffering={this._onPlayerBuffering.bind(this)}
-          onPlayerBufferOK={this._onPlayerBufferOK.bind(this)}
-          onPlayerFinished={this._onPlayerFinished.bind(this)}
-          onPlayerBufferChange={this._onPlayerBufferChange.bind(this)}
-        />
-
-        {posterView}
-        {controlsView}
-      </View>
+      <TouchableWithoutFeedback style={this.props.style}
+        onLayout={this._onLayout.bind(this)}
+        onPress={this.onPress.bind(this)}>
+        <View style={this.props.style}>
+          <RCTMediaPlayerView
+            {...this.props}
+            style={styles.mediaPlayerStyle}
+            ref={RCT_MEDIA_PLAYER_VIEW_REF}
+            onPlayerPlaying={this._onPlayerPlaying.bind(this)}
+            onPlayerProgress={this._onPlayerProgress.bind(this)}
+            onPlayerPaused={this._onPlayerPaused.bind(this)}
+            onPlayerBuffering={this._onPlayerBuffering.bind(this)}
+            onPlayerBufferOK={this._onPlayerBufferOK.bind(this)}
+            onPlayerFinished={this._onPlayerFinished.bind(this)}
+            onPlayerBufferChange={this._onPlayerBufferChange.bind(this)}
+          />
+          {bufferIndicator}
+          {posterView}
+          {controlsView}
+        </View>
+      </TouchableWithoutFeedback>
     );
+  }
+
+  onPress() {
+    if (this.props.controls) {
+      if (!this.state.controlsWillUnmount) {
+        if (!this.state.controls) {
+          this.setState({controls: true, controlsWillUnmount: false})
+        } else {
+          this.setState({controlsWillUnmount: true});
+          this.setTimeout(() => {
+            this.setState({controls: false, controlsWillUnmount: false});
+          }, 350);
+        }
+      }
+    }
   }
 
   _onLayout(e) {
@@ -134,6 +187,26 @@ export default class MediaPlayerView extends React.Component {
     this.setState({width, height});
 
     this.props.onLayout && this.props.onLayout(e);
+  }
+
+  onPosterPress() {
+    this.setState({controls:true});
+    this.play();
+  }
+
+  onFullscreen() {
+    if (this.state.fullscreen) {
+      Orientation.lockToPortrait();
+      BackAndroid.removeEventListener('hardwareBackPress', this.onFullscreen);
+    } else {
+      Orientation.lockToLandscape();
+      BackAndroid.addEventListener('hardwareBackPress', this.onFullscreen);
+    }
+    if (this.props.onFullscreen) {
+      this.props.onFullscreen(this.state.fullscreen);
+    }
+    this.setState({fullscreen: !this.state.fullscreen})
+    return true;
   }
 
   pause() {
@@ -233,7 +306,9 @@ export default class MediaPlayerView extends React.Component {
     if (this.props.controls) {
       this.setState({
         playing: false,
-        buffering: false
+        buffering: false,
+        showPoster: true,
+        controls: false,
       });
     }
   }
@@ -252,3 +327,31 @@ export default class MediaPlayerView extends React.Component {
     }
   }
 }
+
+reactMixin.onClass(MediaPlayerView, TimerMixin);
+
+const styles = StyleSheet.create({
+  positionAbsolute: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  posterTouch: {
+    position: 'absolute',
+    left: 0, right: 0, top: 0, bottom: 0,
+    backgroundColor: 'transparent',
+  },
+  posterImg: {
+    flex: 1,
+    resizeMode: 'contain',
+    backgroundColor: 'transparent',
+  },
+  mediaPlayerStyle: {
+    flex: 1,
+    alignSelf: 'stretch',
+  },
+});
+
+export default MediaPlayerView;

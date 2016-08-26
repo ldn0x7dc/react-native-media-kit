@@ -1,31 +1,30 @@
-import React, {PropTypes} from 'react';
+// @flow
 
+import React, {
+  Component,
+  PropTypes
+} from 'react';
 import ReactNative, {
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
-  NativeModules,
-  requireNativeComponent,
-  Dimensions,
-  ScrollView,
   Image,
-  Platform,
-  ActivityIndicator,
+  Animated
 } from 'react-native';
-
 import Slider from '@ldn0x7dc/react-native-slider';
 
-/**
- * format as --:-- or --:--:--
- * @param timeSec
- * @param containHours
- * @returns {string}
+import reactMixin from 'react-mixin';
+import TimerMixin from 'react-timer-mixin';
+/*
+ * Function Progress of slider
  */
-function formatProgress(timeSec, containHours) {
-  function zeroPad(s) {
+function formatProgress(timeSec: number, containHours: boolean): string {
+  function zeroPad(s: number): string {
     if (s.length === 1) {
       return '0' + s;
+    } else if (!s) {
+      return '00';
     }
     return s;
   }
@@ -54,30 +53,58 @@ function formatProgress(timeSec, containHours) {
   return minutes + ':' + seconds;
 }
 
-export default class Controls extends React.Component {
+/*
+ * ControlsView
+ */
+class Controls extends Component {
+  static propTypes = {
+    playing: PropTypes.bool,
+    current: PropTypes.number,
+    total: PropTypes.number,
+    onSeekTo: React.PropTypes.func,
+    onPauseOrPlay: React.PropTypes.func,
+    bufferRanges: PropTypes.any,
+    onFullscreen: React.PropTypes.func,
+    fullscreen: PropTypes.bool,
+    willUnmount: PropTypes.bool,
+  };
 
-  defaultProps = {
+  static defaultProps = {
     current: 0,
     total: 0,
-    buffering: false,
-    playing: false
-  }
+    playing: false,
+  };
 
-  constructor(props) {
+  constructor(props: propTypes) {
     super(props);
     this.state = {
       sliding: false,
       current: this.props.current,
+      animation: new Animated.Value(0),
+      show: true,
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidMount() {
+    Animated.timing(this.state.animation, {
+      toValue: 1,
+      duration: 300,
+    }).start();
+  }
+
+  componentWillReceiveProps(nextProps: propTypes) {
     if (!this.state.sliding) {
       if (this.props.current != nextProps.current) {
         this.setState({
           current: nextProps.current,
         });
       }
+    }
+    if (this.props.willUnmount !== nextProps.willUnmount) {
+      Animated.timing(this.state.animation, {
+        toValue: 0,
+        duration: 300,
+      }).start();
     }
   }
 
@@ -86,17 +113,8 @@ export default class Controls extends React.Component {
     const currentFormated = formatProgress(this.state.current / 1000, containHours);
     const totalFormated = formatProgress(this.props.total / 1000, containHours);
 
-    let bufferIndicator;
-    if(this.props.buffering) {
-      bufferIndicator = (
-        <ActivityIndicator
-          color={'#f2f2f2'}
-          size={'large'}/>
-      );
-    }
-
     let tracks = [];
-    if(this.props.bufferRanges) {
+    if (this.props.bufferRanges) {
       tracks = this.props.bufferRanges.map((range) => {
         let startValue = range.start;
         let endValue = startValue + range.duration;
@@ -110,37 +128,45 @@ export default class Controls extends React.Component {
     tracks.push(
       {
         key: 'thumbTrack',
-        style: {backgroundColor: 'white'}
+        style: {backgroundColor: 'rgb(49, 173, 221)'}
       }
     );
 
+    const animationStyle = {
+      opacity: this.state.animation,
+      transform: [{
+        translateY: this.state.animation.interpolate({
+          inputRange: [0, 0.1, 1],
+          outputRange: [30, 7, 0]
+        })
+      }],
+    }
 
     return (
       <View
-        style={{position: 'absolute', left: 0, top: 0, right: 0, bottom: 0, flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-        {bufferIndicator}
-        <View
-          style={{position: 'absolute', left: 0, right: 0, bottom: 0, height: 40, backgroundColor: '#00000033', flexDirection: 'row'}}>
-
+        style={styles.controls}>
+        <Animated.View
+          style={[styles.controlsActions, animationStyle]}>
           <TouchableOpacity
-            onPress={this.props.onPauseOrPlay}
-            style={{width: 40, height: 40, alignItems: 'center', justifyContent: 'center'}}>
+            onPress={() => {
+              if (this.state.show) {
+                this.props.onPauseOrPlay();
+              }}
+            }
+            style={styles.buttonContainer}>
             <Image
-              style={{width: 20, height: 20, resizeMode: 'contain'}}
+              style={styles.buttonImg}
               source={this.props.playing ? require('./img/media-player-pause.png') : require('./img/media-player-play.png')}/>
           </TouchableOpacity>
-
           <Text
-            style={{alignSelf: 'center', fontSize: 12, color: 'white', width: currentFormated.length == 5 ? 35:56, textAlign: 'right'}}>
+            style={[styles.currentTime, { width: currentFormated.length == 5 ? 35:56 }]}>
             {currentFormated}
           </Text>
-
           <Slider
-            style={{flex: 1, marginHorizontal: 5, height: 40}}
-            trackContainerStyle={{height: 2, backgroundColor: 'gray'}}
+            style={styles.slider}
+            trackContainerStyle={{ height: 2, backgroundColor: 'gray' }}
             thumbImage={require('./img/media-player-thumb.png')}
-            thumbStyle={{width: 10, height: 10}}
-
+            thumbStyle={{width:10, height: 10}}
             onSlidingComplete={(value) => {
               this.setState({
                 sliding: false,
@@ -157,17 +183,77 @@ export default class Controls extends React.Component {
             maximumValue={this.props.total}
             minimumValue={0}
             value={this.state.current}
-            disabled={this.props.total > 0}
+            disable={this.props.total <= 0}
             tracks={tracks}
           />
-
           <Text
-            style={{alignSelf: 'center', fontSize: 12, color: 'white', width: totalFormated.length == 5 ? 35:56, marginRight: 10}}>
+            style={[styles.totalTime, { width: totalFormated.length == 5 ? 35:56 }]}>
             {totalFormated}
           </Text>
-        </View>
-
+          <TouchableOpacity
+            onPress={() => this.state.show && this.props.onFullscreen()}
+            style={styles.buttonContainer}>
+            <Image
+              style={[styles.buttonImg, {height: 15, width: 15}]}
+              source={this.props.fullscreen ? require('./img/media-player-fullscreen-off.png') : require('./img/media-player-fullscreen-on.png')}/>
+          </TouchableOpacity>
+        </Animated.View>
       </View>
     );
   }
 }
+
+reactMixin.onClass(Controls, TimerMixin);
+
+const styles = StyleSheet.create({
+  controls: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  controlsActions: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 40,
+    alignItems: 'center',
+    flexDirection: 'row',
+    backgroundColor: 'transparent',
+  },
+  buttonContainer: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonImg: {
+    width: 20,
+    height: 20,
+    resizeMode: 'contain',
+  },
+  currentTime: {
+    alignSelf: 'center',
+    fontSize: 10,
+    color: 'white',
+    textAlign: 'right',
+    overflow: 'visible',
+  },
+  totalTime: {
+    alignSelf: 'center',
+    fontSize: 10,
+    color: 'white',
+  },
+  slider: {
+    flex: 1,
+    marginHorizontal: 5,
+    height: 40,
+  },
+});
+
+export default Controls;

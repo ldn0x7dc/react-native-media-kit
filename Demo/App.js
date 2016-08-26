@@ -39,43 +39,16 @@ export default class App extends Component {
 
   render() {
     return (
-      <ScrollView
-        style={{flex: 1, backgroundColor: '#efefef'}}>
         <Video
-          style={{width: this.state.width, height: this.state.height, marginTop: 50, backgroundColor: 'black'}}
-          autoplay={true}
+          style={{width: this.state.width, height: this.state.height, backgroundColor: 'black'}}
+          autoplay={false}
           preload='none'
-          loop={true}
+          loop={false}
           controls={this.state.controls}
           muted={this.state.muted}
-          src={HTTP[0]}
+          src={HLS[6]}
+          poster="http://www.w3schools.com/css/trolltunga.jpg"
         />
-
-        <View
-          style={{flexDirection: 'row', height: 40}}>
-          <TouchableOpacity
-            onPress={() => {
-              this.setState({
-                muted: !this.state.muted
-              })
-            }}
-            style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-            <Text>toggle muted</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => {
-              this.setState({
-                width: 160,
-                height: 90,
-                controls: false
-              })
-            }}
-            style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-            <Text>change layout</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
     );
   }
 }

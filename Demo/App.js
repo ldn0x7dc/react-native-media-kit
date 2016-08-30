@@ -39,16 +39,19 @@ export default class App extends Component {
 
   render() {
     return (
+      <View style={{flex: 1, paddingTop: 50}}>
         <Video
           style={{width: this.state.width, height: this.state.height, backgroundColor: 'black'}}
           autoplay={false}
           preload='none'
           loop={false}
           controls={this.state.controls}
-          muted={this.state.muted}
-          src={HLS[6]}
+          muted={true}
+          src={HLS[2]}
+          title="hello"
           poster="http://www.w3schools.com/css/trolltunga.jpg"
         />
+      </View>
     );
   }
 }

@@ -75,6 +75,7 @@ class MediaPlayerView extends Component {
       showPoster: true,
       controls: props.controls,
       fullscreen: false,
+      stateControls: 0,
     };
     if (props.poster && this.state.showPoster) {
       this.state = {...this.state, controls: false};
@@ -125,6 +126,8 @@ class MediaPlayerView extends Component {
           onFullscreen={this.onFullscreen}
           fullscreen={this.state.fullscreen}
           willUnmount={this.state.controlsWillUnmount}
+          title={this.props.title}
+          leaveTimer={this.leaveTimer.bind(this)}
         />
       );
     }
@@ -167,15 +170,35 @@ class MediaPlayerView extends Component {
     );
   }
 
+  leaveTimer(action: string) {
+    if (action === 'more') {
+      this.setState({stateControls: this.state.stateControls + 1});
+    } else if (action === 'less') {
+      this.setState({stateControls: this.state.stateControls - 1});
+    }
+    console.debug(this.state.stateControls);
+    if (this.state.stateControls == -1 && !this.state.controlsWillUnmount) {
+      this.onPress();
+      this.setState({stateControls: 0});
+    }
+  }
+
   onPress() {
     if (this.props.controls) {
       if (!this.state.controlsWillUnmount) {
         if (!this.state.controls) {
-          this.setState({controls: true, controlsWillUnmount: false})
+          this.setState({
+            controls: true,
+            controlsWillUnmount: false,
+          })
         } else {
           this.setState({controlsWillUnmount: true});
           this.setTimeout(() => {
-            this.setState({controls: false, controlsWillUnmount: false});
+            this.setState({
+              controls: false,
+              controlsWillUnmount: false,
+              stateControls: 0,
+            });
           }, 350);
         }
       }

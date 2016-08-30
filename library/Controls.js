@@ -13,6 +13,7 @@ import ReactNative, {
   Animated
 } from 'react-native';
 import Slider from '@ldn0x7dc/react-native-slider';
+import LinearGradient from 'react-native-linear-gradient';
 
 import reactMixin from 'react-mixin';
 import TimerMixin from 'react-timer-mixin';
@@ -58,15 +59,17 @@ function formatProgress(timeSec: number, containHours: boolean): string {
  */
 class Controls extends Component {
   static propTypes = {
-    playing: PropTypes.bool,
-    current: PropTypes.number,
-    total: PropTypes.number,
-    onSeekTo: React.PropTypes.func,
-    onPauseOrPlay: React.PropTypes.func,
+    playing: PropTypes.bool.isRequired,
+    current: PropTypes.number.isRequired,
+    total: PropTypes.number.isRequired,
+    onSeekTo: React.PropTypes.func.isRequired,
+    onPauseOrPlay: React.PropTypes.func.isRequired,
     bufferRanges: PropTypes.any,
-    onFullscreen: React.PropTypes.func,
-    fullscreen: PropTypes.bool,
-    willUnmount: PropTypes.bool,
+    onFullscreen: React.PropTypes.func.isRequired,
+    fullscreen: PropTypes.bool.isRequired,
+    willUnmount: PropTypes.bool.isRequired,
+    title: PropTypes.string, // if null, does not display name
+    leaveTimer: PropTypes.func,
   };
 
   static defaultProps = {
@@ -83,6 +86,7 @@ class Controls extends Component {
       animation: new Animated.Value(0),
       show: true,
     };
+    this.updateTimer = this.updateTimer.bind(this);
   }
 
   componentDidMount() {
@@ -90,6 +94,9 @@ class Controls extends Component {
       toValue: 1,
       duration: 300,
     }).start();
+    this.setTimeout(() => {
+      this.props.leaveTimer('less');
+    }, 2500);
   }
 
   componentWillReceiveProps(nextProps: propTypes) {
@@ -137,26 +144,46 @@ class Controls extends Component {
       transform: [{
         translateY: this.state.animation.interpolate({
           inputRange: [0, 0.1, 1],
-          outputRange: [30, 7, 0]
+          outputRange: [30, 7, 0],
         })
       }],
+    };
+
+    let titleShow;
+    if (this.props.title) {
+      const animationTitleStyle = {
+        opacity: this.state.animation,
+        transform: [{
+          translateY: this.state.animation.interpolate({
+            inputRange: [0, 0.1, 1],
+            outputRange: [-30, -7, 0],
+          })
+        }],
+      };
+      titleShow = (
+        <Animated.View style={[animationTitleStyle, styles.titleContainer]}>
+          <Text style={styles.title}>{this.props.title}</Text>
+        </Animated.View>
+      );
     }
 
     return (
       <View
         style={styles.controls}>
+        {titleShow}
         <Animated.View
           style={[styles.controlsActions, animationStyle]}>
           <TouchableOpacity
             onPress={() => {
               if (this.state.show) {
                 this.props.onPauseOrPlay();
+                this.updateTimer();
               }}
             }
             style={styles.buttonContainer}>
             <Image
               style={styles.buttonImg}
-              source={this.props.playing ? require('./img/media-player-pause.png') : require('./img/media-player-play.png')}/>
+              source={this.props.playing ? require('./img/ic-pause-48.png') : require('./img/ic-play-48.png')}/>
           </TouchableOpacity>
           <Text
             style={[styles.currentTime, { width: currentFormated.length == 5 ? 35:56 }]}>
@@ -179,6 +206,7 @@ class Controls extends Component {
                 sliding: true,
                 current: value
               });
+              this.updateTimer();
             }}
             maximumValue={this.props.total}
             minimumValue={0}
@@ -191,15 +219,27 @@ class Controls extends Component {
             {totalFormated}
           </Text>
           <TouchableOpacity
-            onPress={() => this.state.show && this.props.onFullscreen()}
+            onPress={() => {
+              if (this.state.show) {
+                this.props.onFullscreen();
+                this.updateTimer();
+              }
+            }}
             style={styles.buttonContainer}>
             <Image
-              style={[styles.buttonImg, {height: 15, width: 15}]}
-              source={this.props.fullscreen ? require('./img/media-player-fullscreen-off.png') : require('./img/media-player-fullscreen-on.png')}/>
+              style={[styles.buttonImg, {height: 20, width: 20}]}
+              source={this.props.fullscreen ? require('./img/ic-collapse-48.png') : require('./img/ic-expand-48.png')}/>
           </TouchableOpacity>
         </Animated.View>
       </View>
     );
+  }
+
+  updateTimer() {
+    this.props.leaveTimer('more');
+    this.setTimeout(() => {
+      this.props.leaveTimer('less');
+    }, 2500);
   }
 }
 
@@ -213,14 +253,21 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'flex-start',
+    overflow: 'hidden',
+    justifyContent: 'space-between',
+  },
+  titleContainer: {
+    padding: 10,
+    paddingLeft: 15,
+    height: 35,
+    flexDirection: 'row',
+    alignSelf: 'stretch',
+    alignItems: 'flex-start',
+    overflow: 'hidden',
+    backgroundColor: 'transparent',
   },
   controlsActions: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
     height: 40,
     alignItems: 'center',
     flexDirection: 'row',
@@ -233,9 +280,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   buttonImg: {
-    width: 20,
-    height: 20,
+    width: 23,
+    height: 23,
     resizeMode: 'contain',
+  },
+  title: {
+    alignSelf: 'center',
+    fontSize: 16,
+    color: 'white',
+    overflow: 'visible',
   },
   currentTime: {
     alignSelf: 'center',

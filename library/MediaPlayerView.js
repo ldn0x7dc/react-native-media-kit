@@ -12,11 +12,9 @@ import ReactNative, {
   TouchableWithoutFeedback,
   TouchableOpacity,
   Image,
-  BackAndroid,
   ActivityIndicator
 } from 'react-native';
 
-import Orientation from 'react-native-orientation';
 import Controls from './Controls';
 import reactMixin from 'react-mixin';
 import TimerMixin from 'react-timer-mixin';
@@ -40,7 +38,7 @@ const RCTMediaPlayerView = requireNativeComponent('RCTMediaPlayerView', {
     onPlayerBuffering: PropTypes.func,
     onPlayerBufferOK: PropTypes.func,
     onPlayerProgress: PropTypes.func,
-    onPlayerBufferChange: PropTypes.func
+    onPlayerBufferChange: PropTypes.func,
   }
 });
 
@@ -52,14 +50,18 @@ class MediaPlayerView extends Component {
     poster: PropTypes.string,
     title: PropTypes.string,
     onFullscreen: PropTypes.func,
+    fullscreenEnable: PropTypes.bool,
+    showControlsTimer: PropTypes.numb,
   };
 
   static defaultProps = {
     autoplay: false,
-    controls: true, // if controls, title will appear too
-    title: null,
+    controls: true,
+    title: null, // show title only if it exist
     preload: 'none',
     loop: false,
+    fullscreenEnable: true,
+    showControlsTimer: 2500,
   };
 
   constructor(props: propTypes) {
@@ -128,6 +130,8 @@ class MediaPlayerView extends Component {
           willUnmount={this.state.controlsWillUnmount}
           title={this.props.title}
           leaveTimer={this.leaveTimer.bind(this)}
+          fullscreenEnable={this.props.fullscreenEnable}
+          showControlsTimer={this.props.showControlsTimer}
         />
       );
     }
@@ -218,13 +222,6 @@ class MediaPlayerView extends Component {
   }
 
   onFullscreen() {
-    if (this.state.fullscreen) {
-      Orientation.lockToPortrait();
-      BackAndroid.removeEventListener('hardwareBackPress', this.onFullscreen);
-    } else {
-      Orientation.lockToLandscape();
-      BackAndroid.addEventListener('hardwareBackPress', this.onFullscreen);
-    }
     if (this.props.onFullscreen) {
       this.props.onFullscreen(this.state.fullscreen);
     }
@@ -369,7 +366,7 @@ const styles = StyleSheet.create({
   posterImg: {
     flex: 1,
     resizeMode: 'contain',
-    backgroundColor: 'transparent',
+    backgroundColor: 'black',
   },
   mediaPlayerStyle: {
     flex: 1,

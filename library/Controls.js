@@ -95,7 +95,7 @@ class Controls extends Component {
     }).start();
     this.setTimeout(() => {
       this.props.leaveTimer('less');
-    }, 2500);
+    }, this.props.showControlsTimer);
   }
 
   componentWillReceiveProps(nextProps: propTypes) {
@@ -148,7 +148,7 @@ class Controls extends Component {
       }],
     };
 
-    let titleShow;
+    let titleShow = ( <View/> );
     if (this.props.title) {
       const animationTitleStyle = {
         opacity: this.state.animation,
@@ -163,6 +163,24 @@ class Controls extends Component {
         <Animated.View style={[animationTitleStyle, styles.titleContainer]}>
           <Text style={styles.title}>{this.props.title}</Text>
         </Animated.View>
+      );
+    }
+
+    let fullscreenShow;
+    if (this.props.fullscreenEnable) {
+      fullscreenShow = (
+        <TouchableOpacity
+          onPress={() => {
+            if (this.state.show) {
+              this.props.onFullscreen();
+              this.updateTimer();
+            }
+          }}
+          style={styles.buttonContainer}>
+          <Image
+            style={[styles.buttonImg, {height: 20, width: 20}]}
+            source={this.props.fullscreen ? require('./img/ic-collapse-48.png') : require('./img/ic-expand-48.png')}/>
+        </TouchableOpacity>
       );
     }
 
@@ -214,21 +232,13 @@ class Controls extends Component {
             tracks={tracks}
           />
           <Text
-            style={[styles.totalTime, { width: totalFormated.length == 5 ? 35:56 }]}>
+            style={[styles.totalTime, {
+              width: totalFormated.length == 5 ? 35:56,
+              marginRight: this.props.fullscreenEnable ? 0 : 15,
+            }]}>
             {totalFormated}
           </Text>
-          <TouchableOpacity
-            onPress={() => {
-              if (this.state.show) {
-                this.props.onFullscreen();
-                this.updateTimer();
-              }
-            }}
-            style={styles.buttonContainer}>
-            <Image
-              style={[styles.buttonImg, {height: 20, width: 20}]}
-              source={this.props.fullscreen ? require('./img/ic-collapse-48.png') : require('./img/ic-expand-48.png')}/>
-          </TouchableOpacity>
+          {fullscreenShow}
         </Animated.View>
       </View>
     );
@@ -238,7 +248,7 @@ class Controls extends Component {
     this.props.leaveTimer('more');
     this.setTimeout(() => {
       this.props.leaveTimer('less');
-    }, 2500);
+    }, this.props.showControlsTimer);
   }
 }
 
@@ -269,6 +279,7 @@ const styles = StyleSheet.create({
   controlsActions: {
     height: 40,
     alignItems: 'center',
+    justifyContent: 'center',
     flexDirection: 'row',
     backgroundColor: 'transparent',
   },

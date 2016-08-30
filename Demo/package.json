@@ -7,10 +7,7 @@
   },
   "dependencies": {
     "react": "15.2.1",
-    "react-mixin": "^2.0.2",
     "react-native": "^0.29.2",
-    "react-native-media-kit": "azendoo/react-native-media-kit",
-    "react-native-orientation": "yamill/react-native-orientation",
-    "react-timer-mixin": "^0.13.3"
+    "react-native-media-kit": "azendoo/react-native-media-kit"
   }
 }

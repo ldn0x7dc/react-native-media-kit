@@ -172,7 +172,7 @@ class Controls extends Component {
         <TouchableOpacity
           onPress={() => {
             if (this.state.show) {
-              this.props.onFullscreen();
+              this.props.onFullscreen(this.state.current);
               this.updateTimer();
             }
           }}

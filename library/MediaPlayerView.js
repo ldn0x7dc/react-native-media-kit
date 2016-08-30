@@ -52,6 +52,7 @@ class MediaPlayerView extends Component {
     onFullscreen: PropTypes.func,
     fullscreenEnable: PropTypes.bool,
     showControlsTimer: PropTypes.numb,
+    seekTo: PropTypes.numb,
   };
 
   static defaultProps = {
@@ -82,7 +83,26 @@ class MediaPlayerView extends Component {
     if (props.poster && this.state.showPoster) {
       this.state = {...this.state, controls: false};
     }
+    this.seekTo = this.seekTo.bind(this);
     this.onFullscreen = this.onFullscreen.bind(this);
+
+    /*
+     * SeekTo props
+     */
+    if (props.seeekTo) {
+      this.state = {...this.state, showPoster: false};
+      let args = [props.seekTo];
+      UIManager.dispatchViewManagerCommand(
+        this._getMediaPlayerViewHandle(),
+        UIManager.RCTMediaPlayerView.Commands.seekTo,
+        args
+      );
+      UIManager.dispatchViewManagerCommand(
+        this._getMediaPlayerViewHandle(),
+        UIManager.RCTMediaPlayerView.Commands.play,
+        null
+      );
+    }
   }
 
   componentWillUnmount() {
@@ -221,9 +241,9 @@ class MediaPlayerView extends Component {
     this.play();
   }
 
-  onFullscreen() {
+  onFullscreen(value) {
     if (this.props.onFullscreen) {
-      this.props.onFullscreen(this.state.fullscreen);
+      this.props.onFullscreen(this.state.fullscreen, value);
     }
     this.setState({fullscreen: !this.state.fullscreen})
     return true;

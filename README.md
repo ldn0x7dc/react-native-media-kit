@@ -17,8 +17,6 @@ Supported media types:
 
 ## Install
 
-On this fork, Demo will work properly but you have to install the latest version of react-native-orientation on your own repository or in this one (will be updated later).
-
 `npm install --save react-native-media-kit@latest `
 
 #### iOS

@@ -13,7 +13,6 @@ import ReactNative, {
   Animated
 } from 'react-native';
 import Slider from '@ldn0x7dc/react-native-slider';
-import LinearGradient from 'react-native-linear-gradient';
 
 import reactMixin from 'react-mixin';
 import TimerMixin from 'react-timer-mixin';

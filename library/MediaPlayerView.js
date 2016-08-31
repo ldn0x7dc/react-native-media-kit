@@ -139,6 +139,9 @@ class MediaPlayerView extends Component {
           <Image
             style={styles.posterImg}
             source={{uri: this.props.poster}}/>
+          <Image
+            style={styles.posterPlayImg}
+            source={require('./img/ic-play-100.png')}/>
           </TouchableOpacity>
       );
     }
@@ -211,7 +214,7 @@ class MediaPlayerView extends Component {
     );
   }
 
-  leaveTimer(action: string) {
+  leaveTimer(action = 0: string) {
     if (action === 'more') {
       this.setState({stateControls: this.state.stateControls + 1});
     } else if (action === 'less') {
@@ -226,7 +229,7 @@ class MediaPlayerView extends Component {
   /*
    * Appear and disappear of controls
    */
-  onPress(action = 0: number) {
+  onPress(action: number) {
     /*
      * action is defined by 1 if you want to force over props the function
      */
@@ -259,7 +262,9 @@ class MediaPlayerView extends Component {
   }
 
   onPosterPress() {
-    this.setState({controls:true});
+    if (this.props.controls) {
+      this.setState({controls:true})
+    }
     this.play();
   }
 
@@ -404,11 +409,22 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0, right: 0, top: 0, bottom: 0,
     backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   posterImg: {
-    flex: 1,
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
     resizeMode: 'contain',
+    opacity: 0.6,
     backgroundColor: 'black',
+  },
+  posterPlayImg: {
+    height: 60,
+    width: 60,
   },
   mediaPlayerStyle: {
     flex: 1,

@@ -51,8 +51,8 @@ class MediaPlayerView extends Component {
     title: PropTypes.string,
     onFullscreen: PropTypes.func,
     fullscreenEnable: PropTypes.bool,
-    showControlsTimer: PropTypes.numb,
-    seekTo: PropTypes.numb,
+    showControlsTimer: PropTypes.number,
+    seekTo: PropTypes.number,
   };
 
   static defaultProps = {
@@ -107,6 +107,23 @@ class MediaPlayerView extends Component {
 
   componentWillUnmount() {
     this.stop();
+  }
+
+  componentWillReceiveProps(nextProps: propTypes) {
+    if (this.props.controls != nextProps.controls) {
+      if (nextProps.controls) {
+        this.onPress(1);
+      } else {
+        this.setState({controlsWillUnmount: true});
+        this.setTimeout(() => {
+          this.setState({
+            controls: false,
+            controlsWillUnmount: false,
+            stateControls: 0,
+          });
+        }, 350);
+      }
+    }
   }
 
   render() {
@@ -200,15 +217,20 @@ class MediaPlayerView extends Component {
     } else if (action === 'less') {
       this.setState({stateControls: this.state.stateControls - 1});
     }
-    console.debug(this.state.stateControls);
     if (this.state.stateControls == -1 && !this.state.controlsWillUnmount) {
       this.onPress();
       this.setState({stateControls: 0});
     }
   }
 
-  onPress() {
-    if (this.props.controls) {
+  /*
+   * Appear and disappear of controls
+   */
+  onPress(action: number) {
+    /*
+     * action is defined by 1 if you want to force over props the function
+     */
+    if (this.props.controls || action === 1) {
       if (!this.state.controlsWillUnmount) {
         if (!this.state.controls) {
           this.setState({

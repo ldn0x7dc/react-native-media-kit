@@ -226,7 +226,7 @@ class MediaPlayerView extends Component {
   /*
    * Appear and disappear of controls
    */
-  onPress(action: number) {
+  onPress(action = 0: number) {
     /*
      * action is defined by 1 if you want to force over props the function
      */

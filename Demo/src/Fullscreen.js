@@ -2,38 +2,48 @@ import React, { Component } from 'react';
 import {
   BackAndroid,
   Dimensions,
-  View
+  View,
+  StatusBar
 } from 'react-native';
-
+import Orientation from 'react-native-orientation';
 import { Video } from 'react-native-media-kit';
-
-const {
-  width,
-  height
-} = Dimensions.get('window');
 
 class Fullscreen extends Component {
 
   render() {
-    const { currentState } = this.props;
+    const { currentState, currentTime } = this.props;
 
     if (currentState) {
+      Orientation.lockToLandscape();
+      const {
+        width,
+        height
+      } = Dimensions.get('window');
       return (
-        <Video
+        <View
           style={{
-            width: width,
-            height: height,
-          }}
-          src={currentState.src}
-          title={currentState.title}
-          autoplay={currentState.autoplay}
-          loop={currentState.loop}
-          muted={currentState.muted}
-          fullscreenEnable={currentState.fullscreenEnable}
-          onFullscreen={this.onFullscreen.bind(this)}
-          showControlsTimer={currentState.showControlsTimer}
-          controls={currentState.controls}
-          poster={currentState.poster}/>
+            width: height,
+            height: width,
+            backgroundColor: 'black',
+          }}>
+          <StatusBar hidden={true}/>
+          <Video
+            style={{
+              width: height,
+              height: width,
+              backgroundColor: 'black',
+            }}
+            src={currentState.src}
+            title={currentState.title}
+            autoplay={true}
+            loop={currentState.loop}
+            muted={currentState.muted}
+            fullscreenEnable={true}
+            onFullscreen={this.onFullscreen.bind(this)}
+            showControlsTimer={currentState.showControlsTimer}
+            controls={true}
+            seekTo={currentTime}/>
+          </View>
         );
     } else {
       return <View/>;
@@ -41,7 +51,7 @@ class Fullscreen extends Component {
   }
 
   onFullscreen() {
-
+    this.props.navigator.pop();
   }
 }
 

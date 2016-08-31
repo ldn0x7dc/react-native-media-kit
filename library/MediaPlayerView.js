@@ -190,7 +190,7 @@ class MediaPlayerView extends Component {
     }
 
     return (
-      <TouchableWithoutFeedback style={this.props.style}
+      <TouchableWithoutFeedback style={[{backgroundColor: 'black'}, this.props.style]}
         onLayout={this._onLayout.bind(this)}
         onPress={this.onPress.bind(this)}>
         <View style={this.props.style}>

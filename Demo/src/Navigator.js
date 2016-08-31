@@ -45,7 +45,7 @@ class AppNavigator extends Component {
     if (route.index === 0) {
       return (<App navigator={navigator}/>);
     } else if (route.index === 1) {
-      return (<Fullscreen navigator={navigator} currentState={route.currentState}/>);
+      return (<Fullscreen navigator={navigator} currentState={route.currentState} currentTime={route.currentTime}/>);
     }
   }
 }

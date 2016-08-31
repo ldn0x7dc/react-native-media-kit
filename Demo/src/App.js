@@ -15,6 +15,7 @@ import CustomTextInput from './TextInput';
 import Button from './Button';
 import reactMixin from 'react-mixin';
 import TimerMixin from 'react-timer-mixin';
+import Orientation from 'react-native-orientation';
 
 import { Video } from 'react-native-media-kit';
 
@@ -72,6 +73,7 @@ class App extends Component {
 
   render() {
 
+    Orientation.lockToPortrait();
     let VideoComponent;
     if (!this.state.reload) {
       VideoComponent = (
@@ -160,6 +162,7 @@ class App extends Component {
     this.props.navigator.push({
       index: 1,
       currentState: this.state,
+      currentTime: currentTime,
     });
   }
 

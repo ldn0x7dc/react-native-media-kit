@@ -42,7 +42,8 @@ class Fullscreen extends Component {
             onFullscreen={this.onFullscreen.bind(this)}
             showControlsTimer={currentState.showControlsTimer}
             controls={true}
-            seekTo={currentTime}/>
+            seekTo={currentTime}
+            fullscreen={true}/>
           </View>
         );
     } else {

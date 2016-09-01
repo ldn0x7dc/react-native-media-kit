@@ -53,6 +53,7 @@ class MediaPlayerView extends Component {
     fullscreenEnable: PropTypes.bool,
     showControlsTimer: PropTypes.number,
     seekTo: PropTypes.number,
+    fullscreen: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -77,7 +78,6 @@ class MediaPlayerView extends Component {
       height: 0,
       showPoster: true,
       controls: props.controls,
-      fullscreen: false,
       stateControls: 0,
     };
     if (props.poster && this.state.showPoster) {
@@ -96,11 +96,6 @@ class MediaPlayerView extends Component {
         this._getMediaPlayerViewHandle(),
         UIManager.RCTMediaPlayerView.Commands.seekTo,
         args
-      );
-      UIManager.dispatchViewManagerCommand(
-        this._getMediaPlayerViewHandle(),
-        UIManager.RCTMediaPlayerView.Commands.play,
-        null
       );
     }
   }
@@ -166,12 +161,12 @@ class MediaPlayerView extends Component {
           }}
           bufferRanges={this.state.bufferRanges}
           onFullscreen={this.onFullscreen}
-          fullscreen={this.state.fullscreen}
           willUnmount={this.state.controlsWillUnmount}
           title={this.props.title}
           leaveTimer={this.leaveTimer.bind(this)}
           fullscreenEnable={this.props.fullscreenEnable}
           showControlsTimer={this.props.showControlsTimer}
+          fullscreen={this.props.fullscreen}
         />
       );
     }
@@ -190,7 +185,7 @@ class MediaPlayerView extends Component {
     }
 
     return (
-      <TouchableWithoutFeedback style={[{backgroundColor: 'black'}, this.props.style]}
+      <TouchableWithoutFeedback style={this.props.style}
         onLayout={this._onLayout.bind(this)}
         onPress={this.onPress.bind(this)}>
         <View style={this.props.style}>
@@ -272,7 +267,6 @@ class MediaPlayerView extends Component {
     if (this.props.onFullscreen) {
       this.props.onFullscreen(this.state.fullscreen, value);
     }
-    this.setState({fullscreen: !this.state.fullscreen})
     return true;
   }
 

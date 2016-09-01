@@ -91,7 +91,8 @@ class App extends Component {
           onFullscreen={this.onFullscreen.bind(this)}
           showControlsTimer={this.state.showControlsTimer}
           controls={this.state.controls}
-          poster={this.state.poster}/>
+          poster={this.state.poster}
+          fullscreen={false}/>
         );
     } else {
       VideoComponent = false;

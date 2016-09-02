@@ -83,20 +83,14 @@ class MediaPlayerView extends Component {
     if (props.poster && this.state.showPoster) {
       this.state = {...this.state, controls: false};
     }
-    this.seekTo = this.seekTo.bind(this);
     this.onFullscreen = this.onFullscreen.bind(this);
 
     /*
      * SeekTo props
      */
+    this.seekTo = this.seekTo.bind(this)
     if (props.seeekTo) {
-      this.state = {...this.state, showPoster: false};
-      let args = [props.seekTo];
-      UIManager.dispatchViewManagerCommand(
-        this._getMediaPlayerViewHandle(),
-        UIManager.RCTMediaPlayerView.Commands.seekTo,
-        args
-      );
+      this.seekTo(props.seekTo);
     }
   }
 
@@ -105,6 +99,10 @@ class MediaPlayerView extends Component {
   }
 
   componentWillReceiveProps(nextProps: propTypes) {
+
+    if (nextProps.autoplay) {
+      this.setState( {showPoster: false} );
+    }
     if (this.props.controls != nextProps.controls) {
       if (nextProps.controls) {
         this.onPress(1);
@@ -122,11 +120,12 @@ class MediaPlayerView extends Component {
   }
 
   render() {
+
     /*
      * Poster (Image when mediaPlayer is not started)
      */
     let posterView;
-    if(this.props.poster && this.state.width && this.state.height && this.state.showPoster) {
+    if(!this.playing && this.props.poster && this.state.width && this.state.height && this.state.showPoster) {
       posterView = (
         <TouchableOpacity
           onPress={this.onPosterPress.bind(this)}
@@ -151,7 +150,7 @@ class MediaPlayerView extends Component {
           playing={this.state.playing}
           current={this.state.current}
           total={this.state.total}
-          onSeekTo={this.seekTo.bind(this)}
+          onSeekTo={this.seekTo}
           onPauseOrPlay={() => {
             if(this.state.playing) {
               this.pause();
@@ -253,6 +252,10 @@ class MediaPlayerView extends Component {
     const {width, height} = e.nativeEvent.layout;
     this.setState({width, height});
 
+    if (this.props.seekTo) {
+      this.seekTo(this.props.seekTo);
+    }
+
     this.props.onLayout && this.props.onLayout(e);
   }
 
@@ -296,6 +299,7 @@ class MediaPlayerView extends Component {
   }
 
   seekTo(timeMs) {
+    console.log(timeMs);
     this.setState({showPoster: false})
     let args = [timeMs];
     UIManager.dispatchViewManagerCommand(
@@ -368,7 +372,7 @@ class MediaPlayerView extends Component {
       this.setState({
         playing: false,
         buffering: false,
-        showPoster: true,
+        showPoster: this.props.autoplay ? false : true,
         controls: false,
       });
     }

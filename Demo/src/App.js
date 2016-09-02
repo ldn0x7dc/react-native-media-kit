@@ -50,7 +50,7 @@ const initalState = {
   controls: true,
   autoplay: false,
   loop: true,
-  muted: false,
+  muted: true,
   fullscreenEnable: true,
   title: 'Hello World !',
   src: HLS[2],

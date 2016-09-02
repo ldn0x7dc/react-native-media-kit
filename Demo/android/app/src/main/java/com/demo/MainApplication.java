@@ -14,6 +14,8 @@ import java.util.List;
 
 import com.greatdroid.reactnative.media.MediaKitPackage;
 
+import com.github.yamill.orientation.OrientationPackage;
+
 public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
@@ -26,7 +28,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
-              new MediaKitPackage()
+              new MediaKitPackage(),
+              new OrientationPackage()
       );
     }
   };

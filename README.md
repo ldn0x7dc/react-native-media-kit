@@ -58,7 +58,40 @@ protected List<ReactPackage> getPackages() {
 
 ## Documentation
 
+### API
+
+The API is designed to mimics html [`<video />`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video). (*For now, the Video and Audio component are identical*)
+
+###### But
+
+[Liroo](https://github.com/Liroo) added some custom/js props which is not relative to html.
+
+See #26 for further information about this PR.
+
+##### Properties
+
+| key                  | value                                    | type | default |
+| -------------------- | ---------------------------------------- | ---- | ------- |
+| src                  | the URL of the video                     | string (url) | *null* |
+| autoplay             | true to automatically begins to play. | bool | `false` |
+| preload              | can be 'none', 'auto'. | string | `'none'` |
+| loop                 | true to automatically seek back to the start upon reaching the end of the video. | bool | `false` |
+| muted                | true to silence the audio. | bool | `false` |
+| controls             | true to show controls to allow user to control video playback, including seeking, and pause/resume playback. | bool | `true` |
+| poster               | an image URL indicating a poster frame to show until the user plays. | string (url) | *null* |
+| title | If controls is `true` and title is defined, title will be display on the video | string | *null* |
+| fullscreenEnable | Add a fullscreen button controls (You must create your own view in full screen. Disable if you do not want) | bool | `true` |
+| onFullScreen | Callback called when fullscreen button is pressed | func (fullscreenState: bool, currentTime: number) | *undefined* |
+| showControlsTimer | in ms, the time of appearance of controls | number | 2500 (2.5s) |
+| seekTo | a special parameter that will start the video at the given value (normally used to manage the view in full screen) | number | 0 |
+
+##### Exemple
+
 ```
+/*
+ * Demo/App.js
+ */
+
 import {Video} from 'react-native-media-kit';
 ...
 render() {
@@ -78,39 +111,10 @@ render() {
 
 ```
 
-### API
-
-The API is designed to mimics html [`<video />`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video). (*For now, the Video and Audio component are identical*)
-
-##### Properties
-
-| key                  | value                                    | iOS  | Android |
-| -------------------- | ---------------------------------------- | ---- | ------- |
-| src                  | the URL of the video                     | OK   | OK      |
-| autoplay             | true to automatically begins to play. Default is false. | OK   | OK      |
-| preload              | can be 'none', 'auto'. Default is 'none'. | OK   | OK      |
-| loop                 | true to automatically seek back to the start upon reaching the end of the video. Default is 'false'. | OK   | OK      |
-| controls             | true to show controls to allow user to control video playback, including seeking, and pause/resume playback. Default is true. | OK   | OK      |
-| poster               | an image URL indicating a poster frame to show until the user plays. | OK   | OK      |
-| muted                | true to silence the audio. Default is false. | OK   | OK      |
-| onPlayerPaused       |                                          | OK   | OK      |
-| onPlayerPlaying      |                                          | OK   | OK      |
-| onPlayerFinished     |                                          | OK   | OK      |
-| onPlayerBuffering    |                                          | OK   | OK      |
-| onPlayerBufferOK     |                                          | OK   | OK      |
-| onPlayerProgress     |                                          | OK   | OK      |
-| onPlayerBufferChange |                                          | OK   | OK      |
-
-- ***pause***
-- ***play***
-- ***stop***
-- ***seekTo***
-
-
 For details about the usage of above APIs, check `library/MediaPlayerView.js`.
-
 
 
 ## TODO
 
 * background play
+* Hit on slider (PR on the original dependency)

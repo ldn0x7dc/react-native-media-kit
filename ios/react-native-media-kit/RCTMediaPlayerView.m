@@ -47,9 +47,21 @@
   }
 }
 
+
 - (void)initPlayerIfNeeded {
   if(!player) {
-    player = [AVPlayer playerWithURL:[NSURL URLWithString:self.src]];
+    NSURL *url;
+    NSString *httpPrefix = @"http";
+    if ([self.src hasPrefix:httpPrefix]) {
+      url = [NSURL URLWithString:self.src];
+    } else {
+      NSString *resourceType = [self.src pathExtension];
+      NSString *resource = [[self.src lastPathComponent] stringByDeletingPathExtension];
+      NSBundle *mainBundle = [NSBundle mainBundle];
+      NSString *file = [mainBundle pathForResource:resource ofType:resourceType];
+      url = [NSURL fileURLWithPath:file];
+    }
+    player = [AVPlayer playerWithURL:url];
     [self setPlayer:player];
     [self addProgressObserver];
     [self addObservers];

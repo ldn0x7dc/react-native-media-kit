@@ -26,10 +26,6 @@ RCT_EXPORT_VIEW_PROPERTY(onPlayerProgress, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onPlayerBufferChange, RCTBubblingEventBlock)
 
 
-- (NSDictionary<NSString *, id> *)constantsToExport {
-  return [super constantsToExport];
-}
-
 RCT_EXPORT_METHOD(pause:(nonnull NSNumber *)reactTag) {
   [self executeBlock:^(RCTMediaPlayerView *view) {
     [view pause];

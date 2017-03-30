@@ -356,8 +356,9 @@
 - (void)seekTo: (NSTimeInterval) timeMs {
   NSLog(@"seekTo...timeMs=%f", timeMs);
   if(player) {
-    CMTime cmTime = CMTimeMakeWithSeconds(timeMs/1000, 1);
-    [player seekToTime:cmTime];
+	int32_t timeScale = player.currentItem.asset.duration.timescale;
+	CMTime cmTime = CMTimeMakeWithSeconds(timeMs/1000, timeScale);
+	[player seekToTime:cmTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
   }
 }
 @end

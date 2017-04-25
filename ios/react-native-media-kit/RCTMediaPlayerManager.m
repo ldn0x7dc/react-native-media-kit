@@ -1,6 +1,12 @@
 #import "RCTMediaPlayerManager.h"
 #import "RCTMediaPlayerView.h"
+
+#if __has_include(<React/RCTAssert.h>)
+#import <React/RCTUIManager.h>
+#else
 #import "RCTUIManager.h"
+#endif
+
 
 @implementation RCTMediaPlayerManager
 

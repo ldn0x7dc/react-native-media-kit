@@ -17,6 +17,7 @@ const RCTMediaPlayerView = requireNativeComponent('RCTMediaPlayerView', {
   propTypes: {
     ...View.propTypes,
     src: PropTypes.string,
+    httpHeaders: PropTypes.objectOf(PropTypes.string),
     autoplay: PropTypes.bool,
     preload: PropTypes.string,
     loop: PropTypes.bool,

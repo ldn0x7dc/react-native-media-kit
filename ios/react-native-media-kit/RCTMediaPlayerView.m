@@ -53,14 +53,21 @@
     NSString *httpPrefix = @"http";
     if ([self.src hasPrefix:httpPrefix]) {
         url = [NSURL URLWithString:self.src];
+        NSDictionary * options = nil;
+        if (_httpHeaders.count > 0) {
+            options = @{@"AVURLAssetHTTPHeaderFieldsKey" : _httpHeaders};
+        }
+        AVURLAsset * asset = [AVURLAsset URLAssetWithURL:url options:options];
+        AVPlayerItem * item = [AVPlayerItem playerItemWithAsset:asset];
+        player = [[AVPlayer alloc] initWithPlayerItem:item];
     } else {
         NSString *resourceType = [self.src pathExtension];
         NSString *resource = [[self.src lastPathComponent] stringByDeletingPathExtension];
         NSBundle *mainBundle = [NSBundle mainBundle];
         NSString *file = [mainBundle pathForResource:resource ofType:resourceType];
         url = [NSURL fileURLWithPath:file];
+        player = [AVPlayer playerWithURL:url];
     }
-    player = [AVPlayer playerWithURL:url];
     [self setPlayer:player];
     [self addProgressObserver];
     [self addObservers];
@@ -99,6 +106,12 @@
     [self releasePlayer];
   }
   [self updateProps];
+}
+
+- (void) setHttpHeaders:(NSDictionary *)httpHeaders {
+    NSLog(@"setHTTPHeaders...");
+    _httpHeaders = httpHeaders;
+    [self updateProps];
 }
 
 - (void) setPreload:(NSString *)preload {

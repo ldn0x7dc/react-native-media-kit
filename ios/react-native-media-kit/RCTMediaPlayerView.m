@@ -51,10 +51,10 @@
   if(!player) {
     NSURL *url;
     NSString *httpPrefix = @"http";
-    if ([self.src hasPrefix:httpPrefix]) {
+    if ([self.src hasPrefix:httpPrefix] || [self.src hasPrefix:@"file"]) {
         url = [NSURL URLWithString:self.src];
         NSDictionary * options = nil;
-        if (_httpHeaders.count > 0) {
+        if (_httpHeaders.count > 0 && ![self.src hasPrefix:@"file"]) {
             options = @{@"AVURLAssetHTTPHeaderFieldsKey" : _httpHeaders};
         }
         AVURLAsset * asset = [AVURLAsset URLAssetWithURL:url options:options];

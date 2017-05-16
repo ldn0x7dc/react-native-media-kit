@@ -65,6 +65,9 @@
         NSString *resource = [[self.src lastPathComponent] stringByDeletingPathExtension];
         NSBundle *mainBundle = [NSBundle mainBundle];
         NSString *file = [mainBundle pathForResource:resource ofType:resourceType];
+        if (!file) {
+            file = _src; // might be local file path other than resources
+        }
         url = [NSURL fileURLWithPath:file];
         player = [AVPlayer playerWithURL:url];
     }

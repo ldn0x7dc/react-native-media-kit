@@ -7,11 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2D6342A11F0B60370025EBDB /* RCTMediaPlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FDB0B771CBB7B1900EDD727 /* RCTMediaPlayerManager.m */; };
+		2D6342A21F0B603A0025EBDB /* RCTMediaPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FDB0B791CBB7B1900EDD727 /* RCTMediaPlayerView.m */; };
 		5FDB0B7A1CBB7B1900EDD727 /* RCTMediaPlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FDB0B771CBB7B1900EDD727 /* RCTMediaPlayerManager.m */; };
 		5FDB0B7B1CBB7B1900EDD727 /* RCTMediaPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FDB0B791CBB7B1900EDD727 /* RCTMediaPlayerView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		2D6342961F0B602E0025EBDB /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5FDB0B681CBB7ACA00EDD727 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -24,6 +35,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2D6342981F0B602E0025EBDB /* libreact-native-media-kit-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libreact-native-media-kit-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FDB0B6A1CBB7ACA00EDD727 /* libreact-native-media-kit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libreact-native-media-kit.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FDB0B761CBB7B1900EDD727 /* RCTMediaPlayerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTMediaPlayerManager.h; sourceTree = "<group>"; };
 		5FDB0B771CBB7B1900EDD727 /* RCTMediaPlayerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTMediaPlayerManager.m; sourceTree = "<group>"; };
@@ -32,6 +44,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		2D6342951F0B602E0025EBDB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5FDB0B671CBB7ACA00EDD727 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -54,6 +73,7 @@
 			isa = PBXGroup;
 			children = (
 				5FDB0B6A1CBB7ACA00EDD727 /* libreact-native-media-kit.a */,
+				2D6342981F0B602E0025EBDB /* libreact-native-media-kit-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -72,6 +92,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		2D6342971F0B602E0025EBDB /* react-native-media-kit-tvOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2D6342A01F0B602E0025EBDB /* Build configuration list for PBXNativeTarget "react-native-media-kit-tvOS" */;
+			buildPhases = (
+				2D6342941F0B602E0025EBDB /* Sources */,
+				2D6342951F0B602E0025EBDB /* Frameworks */,
+				2D6342961F0B602E0025EBDB /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "react-native-media-kit-tvOS";
+			productName = "react-native-media-kit-tvOS";
+			productReference = 2D6342981F0B602E0025EBDB /* libreact-native-media-kit-tvOS.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		5FDB0B691CBB7ACA00EDD727 /* react-native-media-kit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5FDB0B731CBB7ACA00EDD727 /* Build configuration list for PBXNativeTarget "react-native-media-kit" */;
@@ -98,6 +135,10 @@
 				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = YOAI;
 				TargetAttributes = {
+					2D6342971F0B602E0025EBDB = {
+						CreatedOnToolsVersion = 8.3.2;
+						ProvisioningStyle = Automatic;
+					};
 					5FDB0B691CBB7ACA00EDD727 = {
 						CreatedOnToolsVersion = 7.3;
 						DevelopmentTeam = TTVS7J5UUP;
@@ -117,11 +158,21 @@
 			projectRoot = "";
 			targets = (
 				5FDB0B691CBB7ACA00EDD727 /* react-native-media-kit */,
+				2D6342971F0B602E0025EBDB /* react-native-media-kit-tvOS */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		2D6342941F0B602E0025EBDB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D6342A21F0B603A0025EBDB /* RCTMediaPlayerView.m in Sources */,
+				2D6342A11F0B60370025EBDB /* RCTMediaPlayerManager.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5FDB0B661CBB7ACA00EDD727 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -134,6 +185,36 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		2D63429E1F0B602E0025EBDB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				TVOS_DEPLOYMENT_TARGET = 10.2;
+			};
+			name = Debug;
+		};
+		2D63429F1F0B602E0025EBDB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				TVOS_DEPLOYMENT_TARGET = 10.2;
+			};
+			name = Release;
+		};
 		5FDB0B711CBB7ACA00EDD727 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -239,6 +320,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		2D6342A01F0B602E0025EBDB /* Build configuration list for PBXNativeTarget "react-native-media-kit-tvOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2D63429E1F0B602E0025EBDB /* Debug */,
+				2D63429F1F0B602E0025EBDB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		5FDB0B651CBB7ACA00EDD727 /* Build configuration list for PBXProject "react-native-media-kit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -49,7 +49,28 @@
 
 - (void)initPlayerIfNeeded {
   if(!player) {
-    player = [AVPlayer playerWithURL:[NSURL URLWithString:self.src]];
+      NSURL *url;
+      if([[self.src substringToIndex:4] caseInsensitiveCompare:@"http"] == 0) {
+          url = [NSURL URLWithString:self.src];
+      } else {
+          NSString *extension = nil;
+          NSString *path = nil;
+          NSString *name = nil;
+          for (int i = (int)(self.src.length - 1); i >= 0; i--) {
+              if ([self.src characterAtIndex:i] == '.') {
+                  name = [self.src substringToIndex:i];
+                  extension = [self.src substringFromIndex:i+1];
+                  break;
+              }
+          }
+          if (name == nil) {
+              name = self.src;
+              extension = @"";
+          }
+          path = [[NSBundle mainBundle] pathForResource:name ofType:extension];
+          url = [NSURL fileURLWithPath:path];
+      }
+    player = [AVPlayer playerWithURL:url];
     [self setPlayer:player];
     [self addProgressObserver];
     [self addObservers];

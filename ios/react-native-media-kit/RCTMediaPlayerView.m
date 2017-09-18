@@ -1,6 +1,14 @@
 #import "RCTMediaPlayerView.h"
 @import AVFoundation;
 
+// The general purpose logger. This ignores logging levels.
+#ifdef DEBUG
+#define RCTDPRINT(xx, ...)  NSLog(@"%s(%d): " xx, __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+#else
+#define RCTDPRINT(xx, ...)  ((void)0)
+#endif // #ifdef DEBUG
+
+
 @interface RCTMediaPlayerView ()
 
 @property (nonatomic, strong) NSTimer *progressTimer;
@@ -34,14 +42,14 @@
 }
 
 - (void)willMoveToWindow:(UIWindow *)newWindow {
-  NSLog(@"willMoveToWindow...%@", newWindow);
+  RCTDPRINT(@"willMoveToWindow...%@", newWindow);
   if(!newWindow) {
     [self releasePlayer];
   }
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
-  NSLog(@"willMoveToSuperview...%@", newSuperview);
+  RCTDPRINT(@"willMoveToSuperview...%@", newSuperview);
   if(!newSuperview) {
     [self releasePlayer];
   }
@@ -96,13 +104,13 @@
 }
 
 - (void) setAutoplay:(BOOL)autoplay {
-  NSLog(@"setAutoplay...autoplay=%d", autoplay);
+  RCTDPRINT(@"setAutoplay...autoplay=%d", autoplay);
   _autoplay = autoplay;
   [self updateProps];
 }
 
 - (void) setSrc: (NSString *)uri {
-  NSLog(@"setSrc...src=%@", uri);
+  RCTDPRINT(@"setSrc...src=%@", uri);
   _src = uri;
 
   if(player) {
@@ -112,31 +120,31 @@
 }
 
 - (void) setHttpHeaders:(NSDictionary *)httpHeaders {
-    NSLog(@"setHTTPHeaders...");
+    RCTDPRINT(@"setHTTPHeaders...");
     _httpHeaders = httpHeaders;
     [self updateProps];
 }
 
 - (void) setPreload:(NSString *)preload {
-  NSLog(@"setPreload...preload=%@", preload);
+  RCTDPRINT(@"setPreload...preload=%@", preload);
   _preload = preload;
   [self updateProps];
 }
 
 - (void) setLoop:(BOOL)loop {
-  NSLog(@"setLoop...loop=%d", loop);
+  RCTDPRINT(@"setLoop...loop=%d", loop);
   _loop = loop;
   [self updateProps];
 }
 
 - (void) setMuted:(BOOL)muted {
-  NSLog(@"setMuted...muted=%d", muted);
+  RCTDPRINT(@"setMuted...muted=%d", muted);
   _muted = muted;
   [self updateProps];
 }
 
 - (void) layoutSubviews {
-  NSLog(@"layoutSubviews...");
+  RCTDPRINT(@"layoutSubviews...");
   [super layoutSubviews];
   firstLayout = true;
   [self updateProps];
@@ -306,14 +314,14 @@
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
-  NSLog(keyPath);
+  RCTDPRINT(@"keypath: %@", keyPath);
   if(!player) {
     return;
   }
   if ([keyPath isEqualToString:@"status"]) {
     AVPlayerItem *playerItem = (AVPlayerItem *)object;
     if(playerItem.status == AVPlayerItemStatusReadyToPlay) {
-      NSLog(@"status...ready to play");
+      RCTDPRINT(@"status...ready to play");
       firstReady = true;
       [self notifyPlayerProgress];
       [self notifyPlayerBufferOK];
@@ -321,9 +329,9 @@
         [self notifyPlayerPlaying];
       }
     } else if(playerItem.status == AVPlayerItemStatusUnknown) {
-      NSLog(@"status...unknown");
+      RCTDPRINT(@"status...unknown");
     } else if(playerItem.status == AVPlayerItemStatusFailed) {
-      NSLog(@"status...failed");
+      RCTDPRINT(@"status...failed");
     }
   } else if ([keyPath isEqualToString:@"loadedTimeRanges"]) {
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:1];
@@ -333,7 +341,7 @@
     }
     [self notifyPlayerBufferChange:array];
   } else if( [keyPath isEqualToString:@"rate"]) {
-    NSLog(@"rate=%f", player.rate);
+    RCTDPRINT(@"rate=%f", player.rate);
     if(player.rate == 0) {
       [self notifyPlayerPaused];
     } else {
@@ -355,7 +363,7 @@
 
 
 - (void)pause {
-  NSLog(@"pause...");
+  RCTDPRINT(@"pause...");
   if (player) {
     [player pause];
     shouldResumePlay = false;
@@ -363,7 +371,7 @@
 }
 
 - (void)play {
-  NSLog(@"play...");
+  RCTDPRINT(@"play...");
   [self initPlayerIfNeeded];
   if(player) {
     [player play];
@@ -372,7 +380,7 @@
 }
 
 - (void)stop {
-  NSLog(@"stop...");
+  RCTDPRINT(@"stop...");
   if (player) {
     [player pause];
     [player seekToTime:kCMTimeZero];
@@ -381,7 +389,7 @@
 }
 
 - (void)seekTo: (NSTimeInterval) timeMs {
-  NSLog(@"seekTo...timeMs=%f", timeMs);
+  RCTDPRINT(@"seekTo...timeMs=%f", timeMs);
   if(player) {
     CMTime cmTime = CMTimeMakeWithSeconds(timeMs/1000, 1);
     [player seekToTime:cmTime];

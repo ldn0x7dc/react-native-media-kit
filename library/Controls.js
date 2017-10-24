@@ -56,7 +56,7 @@ function formatProgress(timeSec, containHours) {
 
 export default class Controls extends React.Component {
 
-  defaultProps = {
+  static defaultProps = {
     current: 0,
     total: 0,
     buffering: false,

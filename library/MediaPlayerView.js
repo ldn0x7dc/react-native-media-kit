@@ -101,6 +101,9 @@ export default class MediaPlayerView extends React.Component {
             }
           }}
           bufferRanges={this.state.bufferRanges}
+          showFull={this.props.showFull}
+          onFull={this.props.onFull}
+          isFull={this.props.isFull}
         />
       );
     }

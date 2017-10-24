@@ -162,9 +162,20 @@ export default class Controls extends React.Component {
           />
 
           <Text
-            style={{alignSelf: 'center', fontSize: 12, color: 'white', width: 38, marginRight: 10}}>
+            style={{alignSelf: 'center', fontSize: 12, color: 'white', width: 38}}>
             {totalFormated}
           </Text>
+
+          {this.props.showFull ? (
+            <TouchableOpacity
+              onPress={this.props.onFull}
+              style={{width: 40, height: 40, alignItems: 'center', justifyContent: 'center'}}>
+              <Image
+                style={{width: 18, height: 18, resizeMode: 'contain'}}
+                source={this.props.isFull ? require('./img/media-player-full-cancel.png') : require('./img/media-player-full.png')}/>
+            </TouchableOpacity>
+          ) : <View style={{width: 10}}/>}
+
         </View>
 
       </View>

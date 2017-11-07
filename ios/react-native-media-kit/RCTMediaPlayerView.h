@@ -6,6 +6,10 @@
 #import "RCTComponent.h"
 #endif
 
+typedef NS_ENUM(NSInteger, RCTMediaPlayerErrorStatus) {
+    RCTMediaPlayerErrorStatusUnknown,
+    RCTMediaPlayerErrorStatusFailed
+};
 
 @interface RCTMediaPlayerView : UIView
 
@@ -16,6 +20,7 @@
 @property (nonatomic, strong) RCTDirectEventBlock onPlayerBuffering;
 @property (nonatomic, strong) RCTDirectEventBlock onPlayerBufferOK;
 @property (nonatomic, strong) RCTDirectEventBlock onPlayerFinished;
+@property (nonatomic, strong) RCTDirectEventBlock onPlayerError;
 @property (nonatomic, strong) RCTDirectEventBlock onPlayerBufferChange;
 
 @property (nonatomic) BOOL autoplay;

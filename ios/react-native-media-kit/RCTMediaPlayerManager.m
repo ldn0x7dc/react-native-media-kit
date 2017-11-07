@@ -31,7 +31,7 @@ RCT_EXPORT_VIEW_PROPERTY(onPlayerBuffering, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onPlayerBufferOK, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onPlayerProgress, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onPlayerBufferChange, RCTBubblingEventBlock)
-
+RCT_EXPORT_VIEW_PROPERTY(onPlayerError, RCTBubblingEventBlock)
 
 RCT_EXPORT_METHOD(pause:(nonnull NSNumber *)reactTag) {
   [self executeBlock:^(RCTMediaPlayerView *view) {

@@ -247,6 +247,12 @@
   }
 }
 
+- (void) notifyPlayerError:(NSError *)error {
+    if (self.onPlayerError) {
+        self.onPlayerError(error);
+    }
+}
+
 - (void) notifyPlayerFinished {
   if (self.onPlayerFinished) {
     self.onPlayerFinished(nil);
@@ -330,8 +336,14 @@
       }
     } else if(playerItem.status == AVPlayerItemStatusUnknown) {
       RCTDPRINT(@"status...unknown");
+      NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"Unknown", nil];
+      NSError *error = [NSError errorWithDomain:NSCocoaErrorDomain code:RCTMediaPlayerErrorStatusUnknown userInfo:userInfo];
+      [self notifyPlayerError:error];
     } else if(playerItem.status == AVPlayerItemStatusFailed) {
       RCTDPRINT(@"status...failed");
+      NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"Failed", nil];
+      NSError *error = [NSError errorWithDomain:NSCocoaErrorDomain code:RCTMediaPlayerErrorStatusFailed userInfo:userInfo];
+      [self notifyPlayerError:error];
     }
   } else if ([keyPath isEqualToString:@"loadedTimeRanges"]) {
     NSMutableArray *array = [NSMutableArray arrayWithCapacity:1];

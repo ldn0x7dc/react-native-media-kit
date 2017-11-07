@@ -29,6 +29,7 @@ const RCTMediaPlayerView = requireNativeComponent('RCTMediaPlayerView', {
     onPlayerBuffering: PropTypes.func,
     onPlayerBufferOK: PropTypes.func,
     onPlayerProgress: PropTypes.func,
+    onPlayerError: PropTypes.func,
     onPlayerBufferChange: PropTypes.func
   }
 });
@@ -122,6 +123,7 @@ export default class MediaPlayerView extends React.Component {
           onPlayerBufferOK={this._onPlayerBufferOK.bind(this)}
           onPlayerFinished={this._onPlayerFinished.bind(this)}
           onPlayerBufferChange={this._onPlayerBufferChange.bind(this)}
+          onPlayerError={this._onPlayerError.bind(this)}
         />
 
         {posterView}
@@ -192,6 +194,16 @@ export default class MediaPlayerView extends React.Component {
     if (this.props.controls) {
       this.setState({
         bufferRanges: e.nativeEvent.ranges
+      });
+    }
+  }
+
+  _onPlayerError(error) {
+    this.props.onPlayerError && this.props.onPlayerError(error);
+
+    if (this.props.controls) {
+      this.setState({
+        playing: false
       });
     }
   }

@@ -2,8 +2,10 @@
 
 #if __has_include(<React/RCTAssert.h>)
 #import <React/RCTComponent.h>
+#import <React/RCTUtils.h>
 #else
 #import "RCTComponent.h"
+#import "RCTUtils.h"
 #endif
 
 typedef NS_ENUM(NSInteger, RCTMediaPlayerErrorStatus) {
@@ -14,14 +16,14 @@ typedef NS_ENUM(NSInteger, RCTMediaPlayerErrorStatus) {
 @interface RCTMediaPlayerView : UIView
 
 
-@property (nonatomic, strong) RCTDirectEventBlock onPlayerPlaying;
-@property (nonatomic, strong) RCTDirectEventBlock onPlayerPaused;
-@property (nonatomic, strong) RCTDirectEventBlock onPlayerProgress;
-@property (nonatomic, strong) RCTDirectEventBlock onPlayerBuffering;
-@property (nonatomic, strong) RCTDirectEventBlock onPlayerBufferOK;
-@property (nonatomic, strong) RCTDirectEventBlock onPlayerFinished;
-@property (nonatomic, strong) RCTDirectEventBlock onPlayerError;
-@property (nonatomic, strong) RCTDirectEventBlock onPlayerBufferChange;
+@property (nonatomic, strong) RCTBubblingEventBlock onPlayerPlaying;
+@property (nonatomic, strong) RCTBubblingEventBlock onPlayerPaused;
+@property (nonatomic, strong) RCTBubblingEventBlock onPlayerProgress;
+@property (nonatomic, strong) RCTBubblingEventBlock onPlayerBuffering;
+@property (nonatomic, strong) RCTBubblingEventBlock onPlayerBufferOK;
+@property (nonatomic, strong) RCTBubblingEventBlock onPlayerFinished;
+@property (nonatomic, strong) RCTBubblingEventBlock onPlayerError;
+@property (nonatomic, strong) RCTBubblingEventBlock onPlayerBufferChange;
 
 @property (nonatomic) BOOL autoplay;
 @property (nonatomic) NSString* src;
@@ -37,3 +39,4 @@ typedef NS_ENUM(NSInteger, RCTMediaPlayerErrorStatus) {
 - (void)seekTo: (NSTimeInterval)timeInSec;
 
 @end
+

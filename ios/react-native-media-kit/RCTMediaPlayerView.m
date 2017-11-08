@@ -317,8 +317,10 @@
 - (void)playerItemDidReachEnd:(NSNotification *)notification {
     [self notifyPlayerFinished];
     if(player) {
-        [player seekToTime:kCMTimeZero];
-        if (self.loop) {
+        if (self.resetSeekTimeAfterFinish && !self.loop) {
+            [player seekToTime:kCMTimeZero];
+        } else if (self.loop) {
+            [player seekToTime:kCMTimeZero];
             [self play];
         }
     }
@@ -404,7 +406,9 @@
     RCTDPRINT(@"stop...");
     if (player) {
         [player pause];
-        [player seekToTime:kCMTimeZero];
+        if (self.resetSeekTimeAfterFinish) {
+            [player seekToTime:kCMTimeZero];;
+        }
         shouldResumePlay = false;
     }
 }

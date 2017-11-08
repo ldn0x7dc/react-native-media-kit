@@ -22,6 +22,7 @@ const RCTMediaPlayerView = requireNativeComponent('RCTMediaPlayerView', {
     preload: PropTypes.string,
     loop: PropTypes.bool,
     muted: PropTypes.bool,
+    resetSeekTimeAfterFinish: PropTypes.bool,
 
     onPlayerPaused: PropTypes.func,
     onPlayerPlaying: PropTypes.func,
@@ -47,6 +48,7 @@ export default class MediaPlayerView extends React.Component {
     controls: true,
     preload: 'none',
     loop: false,
+    resetSeekTimeAfterFinish: true,
   }
 
   constructor(props) {
@@ -189,7 +191,7 @@ export default class MediaPlayerView extends React.Component {
   }
 
   _onPlayerBufferChange(e) {
-    this.props.onPlayerBuffering && this.props.onPlayerBuffering(e);
+    this.props.onPlayerBufferChange && this.props.onPlayerBufferChange(e);
 
     if (this.props.controls) {
       this.setState({

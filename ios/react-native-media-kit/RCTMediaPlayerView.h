@@ -30,6 +30,7 @@ typedef NS_ENUM(NSInteger, RCTMediaPlayerErrorStatus) {
 @property (nonatomic) NSDictionary* httpHeaders;
 @property (nonatomic) NSString* preload; //could be "none", "metadata", "auto"
 @property (nonatomic) BOOL loop;
+@property (nonatomic) BOOL resetSeekTimeAfterFinish;
 @property (nonatomic) BOOL muted;
 
 

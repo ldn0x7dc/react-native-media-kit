@@ -1,6 +1,6 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 
-import ReactNative, {
+import {
   StyleSheet,
   Text,
   View,
@@ -14,7 +14,7 @@ import ReactNative, {
   ActivityIndicator,
 } from 'react-native';
 
-import Slider from '@ldn0x7dc/react-native-slider';
+import Slider from './Slider';
 
 /**
  * format as --:-- or --:--:--
@@ -61,7 +61,7 @@ export default class Controls extends React.Component {
     total: 0,
     buffering: false,
     playing: false
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -73,7 +73,7 @@ export default class Controls extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (!this.state.sliding) {
-      if (this.props.current != nextProps.current) {
+      if (this.props.current !== nextProps.current) {
         this.setState({
           current: nextProps.current,
         });
@@ -131,7 +131,7 @@ export default class Controls extends React.Component {
           </TouchableOpacity>
 
           <Text
-            style={{alignSelf: 'center', fontSize: 12, color: 'white', width: currentFormated.length == 5 ? 35:56, textAlign: 'right'}}>
+            style={{alignSelf: 'center', fontSize: 12, color: 'white', width: currentFormated.length === 5 ? 35:56, textAlign: 'right'}}>
             {currentFormated}
           </Text>
 
@@ -162,7 +162,7 @@ export default class Controls extends React.Component {
           />
 
           <Text
-            style={{alignSelf: 'center', fontSize: 12, color: 'white', width: totalFormated.length == 5 ? 35:56, marginRight: 10}}>
+            style={{alignSelf: 'center', fontSize: 12, color: 'white', width: totalFormated.length === 5 ? 35:56, marginRight: 10}}>
             {totalFormated}
           </Text>
         </View>

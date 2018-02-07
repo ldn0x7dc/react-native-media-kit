@@ -30,3 +30,17 @@ project.xcworkspace
 .gradle
 local.properties
 *.log
+
+# node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# VSCode
+.vscode/
+jsconfig.json
+
+# BUCK
+buck-out/
+\.buckd/
+*.keystore

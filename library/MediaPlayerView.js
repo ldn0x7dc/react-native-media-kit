@@ -5,7 +5,8 @@ import ReactNative, {
   View,
   NativeModules,
   requireNativeComponent,
-  Image
+  Image,
+  ViewPropTypes
 } from 'react-native';
 
 import Controls from './Controls';
@@ -15,7 +16,7 @@ const RCT_MEDIA_PLAYER_VIEW_REF = "RCTMediaPlayerView";
 const RCTMediaPlayerView = requireNativeComponent('RCTMediaPlayerView', {
   name: 'RCTMediaPlayerView',
   propTypes: {
-    ...View.propTypes,
+    ...(ViewPropTypes || View.propTypes),
     src: PropTypes.string,
     httpHeaders: PropTypes.objectOf(PropTypes.string),
     autoplay: PropTypes.bool,

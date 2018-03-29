@@ -49,7 +49,11 @@
 
 - (void)initPlayerIfNeeded {
   if(!player) {
-    player = [AVPlayer playerWithURL:[NSURL URLWithString:self.src]];
+    NSURL *url = [NSURL URLWithString:self.src];
+    if (![self.src hasPrefix:@"http"]) {
+        url = [NSURL fileURLWithPath:self.src];
+    }
+    player = [AVPlayer playerWithURL:url];
     [self setPlayer:player];
     [self addProgressObserver];
     [self addObservers];

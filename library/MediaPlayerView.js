@@ -1,4 +1,4 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 
 import ReactNative, {
   StyleSheet,
@@ -9,6 +9,7 @@ import ReactNative, {
 } from 'react-native';
 
 import Controls from './Controls';
+import PropTypes from 'prop-types'
 
 const UIManager = NativeModules.UIManager;
 const RCT_MEDIA_PLAYER_VIEW_REF = "RCTMediaPlayerView";

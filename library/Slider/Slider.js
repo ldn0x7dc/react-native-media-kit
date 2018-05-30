@@ -1,10 +1,11 @@
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
 import {
   View,
   Image,
   Platform
 } from 'react-native';
 
+import PropTypes from 'prop-types'
 import {createResponder} from 'react-native-gesture-responder';
 
 export default class Slider extends Component {

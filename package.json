@@ -44,7 +44,7 @@
     ]
   ],
   "_from": "git+https://github.com/huowenxuan/react-native-media-kit.git",
-  "_id": "react-native-media-kit@0.0.16",
+  "_id": "react-native-media-kit@0.0.18",
   "_inCache": true,
   "_installable": true,
   "_location": "/react-native-media-kit",
@@ -106,5 +106,5 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "version": "0.0.16"
+  "version": "0.0.18"
 }

@@ -20,11 +20,33 @@
         }
       },
       "/Users/huowenxuan/Desktop/turbo"
+    ],
+    [
+      {
+        "raw": "react-native-media-kit@git+https://github.com/huowenxuan/react-native-media-kit.git",
+        "scope": null,
+        "escapedName": "react-native-media-kit",
+        "name": "react-native-media-kit",
+        "rawSpec": "git+https://github.com/huowenxuan/react-native-media-kit.git",
+        "spec": "git+https://github.com/huowenxuan/react-native-media-kit.git",
+        "type": "hosted",
+        "hosted": {
+          "type": "github",
+          "ssh": "git@github.com:huowenxuan/react-native-media-kit.git",
+          "sshUrl": "git+ssh://git@github.com/huowenxuan/react-native-media-kit.git",
+          "httpsUrl": "git+https://github.com/huowenxuan/react-native-media-kit.git",
+          "gitUrl": "git://github.com/huowenxuan/react-native-media-kit.git",
+          "shortcut": "github:huowenxuan/react-native-media-kit",
+          "directUrl": "https://raw.githubusercontent.com/huowenxuan/react-native-media-kit/master/package.json"
+        }
+      },
+      "/Users/huowenxuan/Desktop/turbo"
     ]
   ],
   "_from": "git+https://github.com/huowenxuan/react-native-media-kit.git",
-  "_id": "react-native-media-kit@0.0.14",
+  "_id": "react-native-media-kit@0.0.16",
   "_inCache": true,
+  "_installable": true,
   "_location": "/react-native-media-kit",
   "_phantomChildren": {},
   "_requested": {
@@ -49,8 +71,8 @@
     "#USER",
     "/"
   ],
-  "_resolved": "git+https://github.com/huowenxuan/react-native-media-kit.git#9f4a832df91c78899f4b7237443a2f6f9e4773a6",
-  "_shasum": "0ba84bd532ba38d154d66b579b53b108a2a224c0",
+  "_resolved": "git+https://github.com/huowenxuan/react-native-media-kit.git#13d2dd48b400f28ca031a2c7c0a788a74bcfeb25",
+  "_shasum": "03ac34b4868f59c45602f6e9b4608a298a5d9178",
   "_shrinkwrap": null,
   "_spec": "react-native-media-kit@git+https://github.com/huowenxuan/react-native-media-kit.git",
   "_where": "/Users/huowenxuan/Desktop/turbo",
@@ -59,7 +81,7 @@
     "url": "https://github.com/ldn0x7dc/react-native-media-kit/issues"
   },
   "dependencies": {
-    "@ldn0x7dc/react-native-slider": "0.0.3"
+    "react-native-gesture-responder": "0.0.10"
   },
   "description": "Video and Audio component for react-native apps, supporting both iOS and Android.",
   "devDependencies": {},
@@ -84,5 +106,5 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "version": "0.0.16"
+  "version": "0.0.16",
 }

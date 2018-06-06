@@ -1,28 +1,110 @@
 {
-  "name": "react-native-media-kit",
-  "version": "0.0.14",
-  "description": "Video and Audio component for react-native apps, supporting both iOS and Android.",
-  "main": "library/index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "_args": [
+    [
+      {
+        "raw": "react-native-media-kit@git+https://github.com/huowenxuan/react-native-media-kit.git",
+        "scope": null,
+        "escapedName": "react-native-media-kit",
+        "name": "react-native-media-kit",
+        "rawSpec": "git+https://github.com/huowenxuan/react-native-media-kit.git",
+        "spec": "git+https://github.com/huowenxuan/react-native-media-kit.git",
+        "type": "hosted",
+        "hosted": {
+          "type": "github",
+          "ssh": "git@github.com:huowenxuan/react-native-media-kit.git",
+          "sshUrl": "git+ssh://git@github.com/huowenxuan/react-native-media-kit.git",
+          "httpsUrl": "git+https://github.com/huowenxuan/react-native-media-kit.git",
+          "gitUrl": "git://github.com/huowenxuan/react-native-media-kit.git",
+          "shortcut": "github:huowenxuan/react-native-media-kit",
+          "directUrl": "https://raw.githubusercontent.com/huowenxuan/react-native-media-kit/master/package.json"
+        }
+      },
+      "/Users/huowenxuan/Desktop/turbo"
+    ],
+    [
+      {
+        "raw": "react-native-media-kit@git+https://github.com/huowenxuan/react-native-media-kit.git",
+        "scope": null,
+        "escapedName": "react-native-media-kit",
+        "name": "react-native-media-kit",
+        "rawSpec": "git+https://github.com/huowenxuan/react-native-media-kit.git",
+        "spec": "git+https://github.com/huowenxuan/react-native-media-kit.git",
+        "type": "hosted",
+        "hosted": {
+          "type": "github",
+          "ssh": "git@github.com:huowenxuan/react-native-media-kit.git",
+          "sshUrl": "git+ssh://git@github.com/huowenxuan/react-native-media-kit.git",
+          "httpsUrl": "git+https://github.com/huowenxuan/react-native-media-kit.git",
+          "gitUrl": "git://github.com/huowenxuan/react-native-media-kit.git",
+          "shortcut": "github:huowenxuan/react-native-media-kit",
+          "directUrl": "https://raw.githubusercontent.com/huowenxuan/react-native-media-kit/master/package.json"
+        }
+      },
+      "/Users/huowenxuan/Desktop/turbo"
+    ]
+  ],
+  "_from": "git+https://github.com/huowenxuan/react-native-media-kit.git",
+  "_id": "react-native-media-kit@0.0.18",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/react-native-media-kit",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "react-native-media-kit@git+https://github.com/huowenxuan/react-native-media-kit.git",
+    "scope": null,
+    "escapedName": "react-native-media-kit",
+    "name": "react-native-media-kit",
+    "rawSpec": "git+https://github.com/huowenxuan/react-native-media-kit.git",
+    "spec": "git+https://github.com/huowenxuan/react-native-media-kit.git",
+    "type": "hosted",
+    "hosted": {
+      "type": "github",
+      "ssh": "git@github.com:huowenxuan/react-native-media-kit.git",
+      "sshUrl": "git+ssh://git@github.com/huowenxuan/react-native-media-kit.git",
+      "httpsUrl": "git+https://github.com/huowenxuan/react-native-media-kit.git",
+      "gitUrl": "git://github.com/huowenxuan/react-native-media-kit.git",
+      "shortcut": "github:huowenxuan/react-native-media-kit",
+      "directUrl": "https://raw.githubusercontent.com/huowenxuan/react-native-media-kit/master/package.json"
+    }
   },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "git+https://github.com/huowenxuan/react-native-media-kit.git#13d2dd48b400f28ca031a2c7c0a788a74bcfeb25",
+  "_shasum": "03ac34b4868f59c45602f6e9b4608a298a5d9178",
+  "_shrinkwrap": null,
+  "_spec": "react-native-media-kit@git+https://github.com/huowenxuan/react-native-media-kit.git",
+  "_where": "/Users/huowenxuan/Desktop/turbo",
   "author": "",
-  "license": "ISC",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ldn0x7dc/react-native-media-kit.git"
+  "bugs": {
+    "url": "https://github.com/ldn0x7dc/react-native-media-kit/issues"
   },
+  "dependencies": {
+    "react-native-gesture-responder": "0.0.10"
+  },
+  "description": "Video and Audio component for react-native apps, supporting both iOS and Android.",
+  "devDependencies": {},
+  "gitHead": "9f4a832df91c78899f4b7237443a2f6f9e4773a6",
+  "homepage": "https://github.com/ldn0x7dc/react-native-media-kit#readme",
   "keywords": [
     "video",
     "audio",
     "media",
     "react-native"
   ],
-  "bugs": {
-    "url": "https://github.com/ldn0x7dc/react-native-media-kit/issues"
+  "license": "ISC",
+  "main": "library/index.js",
+  "name": "react-native-media-kit",
+  "optionalDependencies": {},
+  "readme": "# react-native-media-kit\n\nVideo(and audio) component for react-native apps, supporting both iOS and Android, with API similar to HTML video.\n\nA default set of controls is provided to play/pause, seek and to display current playback and buffer progress.\n\nRuns on react-native 0.28+ (The limit exists due to [ActivityIndicator](https://facebook.github.io/react-native/docs/activityindicator.html) comes after 0.28).\n\nSupported media types:\n\n* iOS: Should be same as those supported by [AVPlayer](https://developer.apple.com/library/ios/documentation/AVFoundation/Reference/AVPlayer_Class/)\n\n\n* Android: Shold be same as those supported by [ExoPlayer](https://github.com/google/ExoPlayer)\n\n![](Demo/demo.gif).\n\n## Install\n\n`npm install --save react-native-media-kit@git+https://github.com/huowenxuan/react-native-media-kit.git`\n\n#### iOS\n\nFor now, just drag ***react-native-media-kit.xcodeproj*** into your Xcode project and link the **libreact-native-media-kit.a** library.\n\n#### Android\n\n**android/settings.gradle**\n\n```\ninclude ':react-native-media-kit'\nproject(':react-native-media-kit').projectDir = new File('../node_modules/react-native-media-kit/android')\n```\n\n**android/app/build.gradle**\n\n```\ndependencies {\n    ...\n    compile project(':react-native-media-kit')\n}\n```\n\n**MainActivity.java (or MainApplication on rn 0.29+)**\n\n```\nimport com.greatdroid.reactnative.media.MediaKitPackage;\n...\nprotected List<ReactPackage> getPackages() {\n    return Arrays.<ReactPackage>asList(\n        new MainReactPackage(),\n            new MediaKitPackage()\n    );\n}\n```\n\n\n\n## Documentation\n\n```\nimport {Video} from 'react-native-media-kit';\n...\nrender() {\n  return (\n  \t<Video\n      style={{width: width, height: width / (16/9)}}\n      src={'http://v.yoai.com/femme_tampon_tutorial.mp4'}\n      autoplay={false}\n      preload={'none'}\n      loop={false}\n      controls={true}\n      muted={false}\n      poster={'http://static.yoaicdn.com/shoppc/images/cover_img_e1e9e6b.jpg'}\n    />\n  );\n}\n\n```\n\n### API\n\nThe API is designed to mimics html [`<video />`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video). (*For now, the Video and Audio component are identical*)\n\n##### Properties\n\n| key                  | value                                    | iOS  | Android |\n| -------------------- | ---------------------------------------- | ---- | ------- |\n| src                  | the URL of the video                     | OK   | OK      |\n| autoplay             | true to automatically begins to play. Default is false. | OK   | OK      |\n| preload              | can be 'none', 'auto'. Default is 'none'. | OK   | OK      |\n| loop                 | true to automatically seek back to the start upon reaching the end of the video. Default is 'false'. | OK   | OK      |\n| controls             | true to show controls to allow user to control video playback, including seeking, and pause/resume playback. Default is true. | OK   | OK      |\n| poster               | an image URL indicating a poster frame to show until the user plays. | OK   | OK      |\n| muted                | true to silence the audio. Default is false. | OK   | OK      |\n| onPlayerPaused       |                                          | OK   | OK      |\n| onPlayerPlaying      |                                          | OK   | OK      |\n| onPlayerFinished     |                                          | OK   | OK      |\n| onPlayerBuffering    |                                          | OK   | OK      |\n| onPlayerBufferOK     |                                          | OK   | OK      |\n| onPlayerProgress     |                                          | OK   | OK      |\n| onPlayerBufferChange |                                          | OK   | OK      |\n\n- ***pause***\n- ***play***\n- ***stop***\n- ***seekTo***\n\n\nFor details about the usage of above APIs, check `library/MediaPlayerView.js`.\n\n\n\n## TODO\n\n* background play\n",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ldn0x7dc/react-native-media-kit.git"
   },
-  "homepage": "https://github.com/ldn0x7dc/react-native-media-kit#readme",
-  "dependencies": {
-    "@ldn0x7dc/react-native-slider": "0.0.3"
-  }
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "0.0.18"
 }

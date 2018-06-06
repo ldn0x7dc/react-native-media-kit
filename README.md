@@ -17,7 +17,7 @@ Supported media types:
 
 ## Install
 
-`npm install --save react-native-media-kit@latest `
+`npm install --save react-native-media-kit@git+https://github.com/huowenxuan/react-native-media-kit.git`
 
 #### iOS
 

@@ -1,4 +1,4 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 
 import ReactNative, {
   StyleSheet,
@@ -14,7 +14,7 @@ import ReactNative, {
   ActivityIndicator,
 } from 'react-native';
 
-import Slider from '@ldn0x7dc/react-native-slider';
+import Slider from './Slider/Slider';
 
 /**
  * format as --:-- or --:--:--
@@ -56,7 +56,7 @@ function formatProgress(timeSec, containHours) {
 
 export default class Controls extends React.Component {
 
-  defaultProps = {
+  static defaultProps = {
     current: 0,
     total: 0,
     buffering: false,
@@ -131,7 +131,7 @@ export default class Controls extends React.Component {
           </TouchableOpacity>
 
           <Text
-            style={{alignSelf: 'center', fontSize: 12, color: 'white', width: currentFormated.length == 5 ? 35:56, textAlign: 'right'}}>
+            style={{alignSelf: 'center', fontSize: 12, color: 'white', width: 38, textAlign: 'right'}}>
             {currentFormated}
           </Text>
 
@@ -162,9 +162,20 @@ export default class Controls extends React.Component {
           />
 
           <Text
-            style={{alignSelf: 'center', fontSize: 12, color: 'white', width: totalFormated.length == 5 ? 35:56, marginRight: 10}}>
+            style={{alignSelf: 'center', fontSize: 12, color: 'white', width: 38}}>
             {totalFormated}
           </Text>
+
+          {this.props.showFull ? (
+            <TouchableOpacity
+              onPress={this.props.onFull}
+              style={{width: 40, height: 40, alignItems: 'center', justifyContent: 'center'}}>
+              <Image
+                style={{width: 18, height: 18, resizeMode: 'contain'}}
+                source={this.props.isFull ? require('./img/media-player-full-cancel.png') : require('./img/media-player-full.png')}/>
+            </TouchableOpacity>
+          ) : <View style={{width: 10}}/>}
+
         </View>
 
       </View>

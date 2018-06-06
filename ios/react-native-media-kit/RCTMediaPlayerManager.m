@@ -1,6 +1,6 @@
 #import "RCTMediaPlayerManager.h"
 #import "RCTMediaPlayerView.h"
-#import "RCTUIManager.h"
+#import <React/RCTUIManager.h>
 
 @implementation RCTMediaPlayerManager
 
@@ -26,9 +26,9 @@ RCT_EXPORT_VIEW_PROPERTY(onPlayerProgress, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onPlayerBufferChange, RCTBubblingEventBlock)
 
 
-- (NSDictionary<NSString *, id> *)constantsToExport {
-  return [super constantsToExport];
-}
+//- (NSDictionary<NSString *, id> *)constantsToExport {
+//  return [super constantsToExport];
+//}
 
 RCT_EXPORT_METHOD(pause:(nonnull NSNumber *)reactTag) {
   [self executeBlock:^(RCTMediaPlayerView *view) {

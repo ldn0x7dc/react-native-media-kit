@@ -49,7 +49,11 @@
 
 - (void)initPlayerIfNeeded {
   if(!player) {
-    player = [AVPlayer playerWithURL:[NSURL URLWithString:self.src]];
+    NSURL *url = [NSURL URLWithString:self.src];
+    if (![self.src hasPrefix:@"http"]) {
+        url = [NSURL fileURLWithPath:self.src];
+    }
+    player = [AVPlayer playerWithURL:url];
     [self setPlayer:player];
     [self addProgressObserver];
     [self addObservers];
@@ -356,8 +360,9 @@
 - (void)seekTo: (NSTimeInterval) timeMs {
   NSLog(@"seekTo...timeMs=%f", timeMs);
   if(player) {
-    CMTime cmTime = CMTimeMakeWithSeconds(timeMs/1000, 1);
-    [player seekToTime:cmTime];
+	int32_t timeScale = player.currentItem.asset.duration.timescale;
+	CMTime cmTime = CMTimeMakeWithSeconds(timeMs/1000, timeScale);
+	[player seekToTime:cmTime toleranceBefore:kCMTimeZero toleranceAfter:kCMTimeZero];
   }
 }
 @end

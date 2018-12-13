@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Image, Platform, ViewPropTypes } from 'react-native';
-
 import { createResponder } from 'react-native-gesture-responder';
+import { View, Image, Platform, ViewPropTypes } from 'react-native';
 
 export default class Slider extends React.Component {
 
@@ -53,9 +52,7 @@ export default class Slider extends React.Component {
       height: 0,
       value: this.props.value
     };
-  }
 
-  componentWillMount() {
     this.gestureResponder = createResponder({
       onStartShouldSetResponder: (evt, gestureState) => true,
       onStartShouldSetResponderCapture: (evt, gestureState) => true,

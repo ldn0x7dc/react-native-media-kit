@@ -1,4 +1,5 @@
 import React from 'react';
+import { polyfill } from 'react-lifecycles-compat';
 
 import {
   StyleSheet,
@@ -54,7 +55,17 @@ function formatProgress(timeSec, containHours) {
   return minutes + ':' + seconds;
 }
 
-export default class Controls extends React.Component {
+class Controls extends React.Component {
+
+  static getDerivedStateFromProps(props, state = {}) {
+    if (state.sliding || state.current === props.current) {
+      return null;
+    }
+
+    return {
+      current: props.current,
+    }
+  }
 
   defaultProps = {
     current: 0,
@@ -69,16 +80,6 @@ export default class Controls extends React.Component {
       sliding: false,
       current: this.props.current,
     };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (!this.state.sliding) {
-      if (this.props.current !== nextProps.current) {
-        this.setState({
-          current: nextProps.current,
-        });
-      }
-    }
   }
 
   render() {
@@ -171,3 +172,5 @@ export default class Controls extends React.Component {
     );
   }
 }
+
+module.exports = polyfill(Controls);
